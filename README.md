@@ -2,7 +2,7 @@
 
 A calculator a vending sales team can open in front of an operator and use to answer the one question that decides the deal: **when do the card readers pay for themselves?**
 
-**Live demo:** _link added after deployment_
+**Live demo:** [vending-payback.vercel.app](https://vending-payback.vercel.app)
 
 ![The calculator: worksheet on the left, the result display with three scenarios on the right](docs/screenshot.png)
 
