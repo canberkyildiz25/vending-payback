@@ -1,0 +1,430 @@
+<title>Cashless Vending Payback</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,500;62..125,700;62..125,800&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+/* Layout: operator's worksheet on the left, a "machine display" result panel on the right that stays in view */
+:root {
+  --bg: #eef1f4;
+  --panel: #ffffff;
+  --ink: #15212c;
+  --muted: #5b6b79;
+  --line: #d3dae1;
+  --accent: #2346c4;        /* cobalt: actions, focus, chart line */
+  --coin: #c98300;          /* brass: money highlights */
+  --gain: #1d7a4f;
+  --loss: #b3372b;
+  --display-bg: #121b24;    /* the result panel reads like a vending display */
+  --display-ink: #e9f0f5;
+  --display-dim: #8fa3b3;
+  --display-coin: #f2b544;
+  --display-grid: #26333f;
+  --font-display: "Archivo", "Arial Narrow", system-ui, sans-serif;
+  --font-body: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0d141b; --panel: #15202a; --ink: #e4ebf1; --muted: #93a4b3; --line: #2a3845;
+    --accent: #7d97ff; --coin: #f0b44a; --gain: #4fc58c; --loss: #f07a6c;
+    --display-bg: #070c11; --display-ink: #eef4f8; --display-dim: #8397a7; --display-coin: #f5bd55; --display-grid: #1c2833;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0d141b; --panel: #15202a; --ink: #e4ebf1; --muted: #93a4b3; --line: #2a3845;
+  --accent: #7d97ff; --coin: #f0b44a; --gain: #4fc58c; --loss: #f07a6c;
+  --display-bg: #070c11; --display-ink: #eef4f8; --display-dim: #8397a7; --display-coin: #f5bd55; --display-grid: #1c2833;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+body {
+  background: var(--bg); color: var(--ink);
+  font-family: var(--font-body); font-size: 15px; line-height: 1.5;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 28px 40px;
+}
+.wrap { max-width: 1120px; margin: 0 auto; display: flex; flex-direction: column; gap: 24px; }
+
+header { display: flex; flex-direction: column; gap: 8px; }
+.sticker {
+  align-self: flex-start;
+  font-family: var(--font-display); font-weight: 800; font-stretch: 75%;
+  font-size: 12px; letter-spacing: .12em; text-transform: uppercase;
+  border: 2px solid var(--ink); padding: 3px 8px; position: relative; color: var(--ink);
+}
+.sticker::after { /* the old "exact change only" sticker, crossed out */
+  content: ""; position: absolute; left: -4px; right: -4px; top: 50%;
+  height: 2px; background: var(--loss); transform: rotate(-4deg);
+}
+h1 {
+  margin: 0; font-family: var(--font-display); font-weight: 800; font-stretch: 82%;
+  font-size: clamp(30px, 5vw, 46px); line-height: 1.05; letter-spacing: -.01em; text-wrap: balance;
+}
+.lede { margin: 0; color: var(--muted); max-width: 62ch; }
+
+.grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr); gap: 24px; align-items: start; }
+@media (max-width: 860px) { .grid { grid-template-columns: minmax(0, 1fr); } }
+
+/* worksheet */
+.sheet { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 20px; display: flex; flex-direction: column; gap: 22px; min-width: 0; }
+.sheet-top { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; }
+.note { font-size: 12.5px; color: var(--muted); margin: 0; }
+fieldset { border: 0; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 12px; min-width: 0; }
+legend {
+  font-family: var(--font-display); font-weight: 700; font-stretch: 90%;
+  font-size: 12px; letter-spacing: .1em; text-transform: uppercase; color: var(--muted);
+  padding: 0 0 6px; border-bottom: 1px solid var(--line); width: 100%; margin-bottom: 4px;
+}
+.field { display: grid; grid-template-columns: minmax(0, 1fr) 128px; gap: 12px; align-items: center; }
+.field label { font-size: 14px; line-height: 1.35; }
+.field label small { display: block; color: var(--muted); font-size: 12px; }
+.tag { font-size: 10.5px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--coin); margin-left: 4px; }
+.inp { position: relative; display: flex; align-items: center; }
+.inp input {
+  width: 100%; font: 500 15px var(--font-mono); font-variant-numeric: tabular-nums; text-align: right;
+  color: var(--ink); background: var(--bg); border: 1px solid var(--line); border-radius: 6px;
+  padding: 8px 10px; padding-right: var(--unit-pad, 10px);
+}
+.inp .unit { position: absolute; right: 9px; font: 500 12px var(--font-mono); color: var(--muted); pointer-events: none; }
+.inp.has-unit input { --unit-pad: 30px; }
+.inp.has-prefix input { padding-left: 26px; }
+.inp .prefix { position: absolute; left: 9px; font: 500 13px var(--font-mono); color: var(--muted); pointer-events: none; }
+input:focus-visible, select:focus-visible, button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+select { font: 500 14px var(--font-body); color: var(--ink); background: var(--bg); border: 1px solid var(--line); border-radius: 6px; padding: 6px 8px; }
+.cur { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--muted); }
+
+/* result display */
+.display {
+  background: var(--display-bg); color: var(--display-ink); border-radius: 10px; padding: 22px;
+  display: flex; flex-direction: column; gap: 18px; min-width: 0;
+  position: sticky; top: calc(env(safe-area-inset-top, 0px) + 16px);
+}
+@media (max-width: 860px) { .display { position: static; } }
+.d-label { font-family: var(--font-display); font-weight: 700; font-stretch: 90%; font-size: 12px; letter-spacing: .12em; text-transform: uppercase; color: var(--display-dim); }
+.payback { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
+.payback .big {
+  font-family: var(--font-mono); font-weight: 600; font-variant-numeric: tabular-nums;
+  font-size: clamp(44px, 7vw, 64px); line-height: 1; color: var(--display-coin);
+}
+.payback .unit { font-family: var(--font-display); font-stretch: 85%; font-size: 20px; font-weight: 700; }
+.verdict { font-size: 14px; color: var(--display-dim); margin: 0; }
+.kpis { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+@media (max-width: 480px) { .kpis { grid-template-columns: minmax(0, 1fr); } }
+.kpi { border-top: 1px solid var(--display-grid); padding-top: 10px; display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.kpi .v { font: 600 20px var(--font-mono); font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
+.kpi .k { font-size: 12px; color: var(--display-dim); }
+.pos { color: #6fdca5; } .neg { color: #ff9a8c; }
+.chart-wrap { min-width: 0; }
+svg.chart { width: 100%; height: auto; display: block; }
+.breakdown { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+.breakdown td { padding: 6px 0; border-top: 1px solid var(--display-grid); }
+.breakdown td:last-child { text-align: right; font-family: var(--font-mono); font-variant-numeric: tabular-nums; white-space: nowrap; padding-left: 12px; }
+.breakdown tr.total td { font-weight: 600; border-top: 1px solid var(--display-dim); }
+.actions { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+button {
+  font: 600 14px var(--font-body); border-radius: 6px; padding: 10px 14px; cursor: pointer; border: 1px solid transparent;
+}
+.btn-primary { background: var(--display-coin); color: #1b1404; }
+.btn-primary:hover { filter: brightness(1.06); }
+.btn-ghost { background: transparent; color: var(--accent); border-color: var(--line); }
+.btn-ghost:hover { border-color: var(--accent); }
+.copied { font-size: 13px; color: #6fdca5; }
+textarea#fallback { width: 100%; min-height: 160px; font: 13px var(--font-mono); background: var(--display-grid); color: var(--display-ink); border: 0; border-radius: 6px; padding: 10px; }
+
+.method { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 18px 20px; display: flex; flex-direction: column; gap: 8px; }
+.method h2 { margin: 0; font-family: var(--font-display); font-weight: 700; font-stretch: 90%; font-size: 18px; }
+.method p, .method li { margin: 0; color: var(--muted); font-size: 14px; max-width: 75ch; }
+.method ul { margin: 0; padding-left: 18px; display: flex; flex-direction: column; gap: 4px; }
+footer { color: var(--muted); font-size: 13px; }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
+</style>
+
+<div class="wrap">
+  <header>
+    <span class="sticker" aria-hidden="true">Exact change only</span>
+    <h1>What would card payments earn your vending fleet?</h1>
+    <p class="lede">Enter your own fleet numbers to see the monthly gain, the payback period and the three-year return of adding card and phone payments to your machines. The figures filled in below are example values.</p>
+  </header>
+
+  <div class="grid">
+    <form class="sheet" id="form" novalidate>
+      <div class="sheet-top">
+        <p class="note">Example values. Replace them with your own.</p>
+        <label class="cur" for="currency">Currency
+          <select id="currency">
+            <option value="€">€ EUR</option>
+            <option value="$">$ USD</option>
+            <option value="£">£ GBP</option>
+          </select>
+        </label>
+      </div>
+
+      <fieldset>
+        <legend>Your fleet today</legend>
+        <div class="field">
+          <label for="machines">Machines</label>
+          <div class="inp"><input id="machines" type="number" inputmode="decimal" min="1" step="1" value="50"></div>
+        </div>
+        <div class="field">
+          <label for="daily">Sales per machine per day<small>Cash only, today</small></label>
+          <div class="inp has-prefix"><span class="prefix cur-sym">€</span><input id="daily" type="number" inputmode="decimal" min="0" step="1" value="40"></div>
+        </div>
+        <div class="field">
+          <label for="days">Selling days per month</label>
+          <div class="inp"><input id="days" type="number" inputmode="decimal" min="1" max="31" step="1" value="30"></div>
+        </div>
+        <div class="field">
+          <label for="margin">Gross margin on products<small>What you keep after product cost</small></label>
+          <div class="inp has-unit"><input id="margin" type="number" inputmode="decimal" min="0" max="100" step="1" value="40"><span class="unit">%</span></div>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>With card payments</legend>
+        <div class="field">
+          <label for="uplift">Sales increase <span class="tag">your estimate</span><small>Buyers without coins can now pay</small></label>
+          <div class="inp has-unit"><input id="uplift" type="number" inputmode="decimal" min="0" max="200" step="1" value="15"><span class="unit">%</span></div>
+        </div>
+        <div class="field">
+          <label for="share">Share of sales paid by card or phone <span class="tag">your estimate</span></label>
+          <div class="inp has-unit"><input id="share" type="number" inputmode="decimal" min="0" max="100" step="1" value="50"><span class="unit">%</span></div>
+        </div>
+        <div class="field">
+          <label for="handling">Cash handling saved per machine per month<small>Fewer collections, counting and coin top-ups</small></label>
+          <div class="inp has-prefix"><span class="prefix cur-sym">€</span><input id="handling" type="number" inputmode="decimal" min="0" step="1" value="10"></div>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Cost of the card readers</legend>
+        <div class="field">
+          <label for="hardware">Reader price per machine<small>One-off, including installation</small></label>
+          <div class="inp has-prefix"><span class="prefix cur-sym">€</span><input id="hardware" type="number" inputmode="decimal" min="0" step="1" value="300"></div>
+        </div>
+        <div class="field">
+          <label for="service">Service fee per reader per month</label>
+          <div class="inp has-prefix"><span class="prefix cur-sym">€</span><input id="service" type="number" inputmode="decimal" min="0" step="0.5" value="8"></div>
+        </div>
+        <div class="field">
+          <label for="fee">Card processing fee<small>Charged on card and phone sales</small></label>
+          <div class="inp has-unit"><input id="fee" type="number" inputmode="decimal" min="0" max="20" step="0.1" value="2.5"><span class="unit">%</span></div>
+        </div>
+      </fieldset>
+    </form>
+
+    <section class="display" aria-live="polite" aria-labelledby="pb-label">
+      <div>
+        <div class="d-label" id="pb-label">Payback period</div>
+        <div class="payback"><span class="big" id="pb">–</span><span class="unit" id="pb-unit">months</span></div>
+        <p class="verdict" id="verdict"></p>
+      </div>
+
+      <div class="kpis">
+        <div class="kpi"><span class="v" id="k-month">–</span><span class="k">Net gain per month</span></div>
+        <div class="kpi"><span class="v" id="k-upfront">–</span><span class="k">Upfront investment</span></div>
+        <div class="kpi"><span class="v" id="k-3y">–</span><span class="k">Net gain after 3 years</span></div>
+      </div>
+
+      <div class="chart-wrap">
+        <div class="d-label" style="margin-bottom:6px">Cumulative net position, 36 months</div>
+        <svg class="chart" id="chart" viewBox="0 0 560 220" role="img" aria-label="Cumulative net position over 36 months"></svg>
+      </div>
+
+      <table class="breakdown" aria-label="Monthly breakdown">
+        <tbody>
+          <tr><td>Extra gross profit from higher sales</td><td id="b-profit">–</td></tr>
+          <tr><td>Cash handling saved</td><td id="b-handling">–</td></tr>
+          <tr><td>Card processing fees</td><td id="b-fees">–</td></tr>
+          <tr><td>Reader service fees</td><td id="b-service">–</td></tr>
+          <tr class="total"><td>Net gain per month</td><td id="b-net">–</td></tr>
+        </tbody>
+      </table>
+
+      <div class="actions">
+        <button type="button" class="btn-primary" id="copy">Copy summary for a client email</button>
+        <span class="copied" id="copied" hidden>Summary copied</span>
+      </div>
+      <textarea id="fallback" hidden readonly aria-label="Summary text to copy"></textarea>
+    </section>
+  </div>
+
+  <section class="method">
+    <h2>How the numbers are worked out</h2>
+    <ul>
+      <li>Monthly sales today = machines × sales per machine per day × selling days.</li>
+      <li>Extra gross profit = monthly sales today × sales increase × gross margin. Only the margin counts as gain, not the full extra revenue.</li>
+      <li>Card processing fees apply to the card and phone share of the new, higher sales.</li>
+      <li>Net gain per month = extra gross profit + cash handling saved − processing fees − reader service fees.</li>
+      <li>Payback period = reader price for the whole fleet ÷ net gain per month.</li>
+    </ul>
+    <p>The sales increase and the card share differ by location and audience. Use figures from your own pilot machines where you have them.</p>
+  </section>
+
+  <footer>Built by Canberk Yıldız, international B2B sales.</footer>
+</div>
+
+<script>
+(function () {
+  const ids = ["machines","daily","days","margin","uplift","share","handling","hardware","service","fee"];
+  const el = id => document.getElementById(id);
+  const num = id => { const v = parseFloat(el(id).value); return Number.isFinite(v) && v >= 0 ? v : 0; };
+  let sym = "€";
+
+  function money(v, digits) {
+    const d = digits == null ? 0 : digits;
+    const s = Math.abs(v).toLocaleString("en-US", { minimumFractionDigits: d, maximumFractionDigits: d });
+    return (v < 0 ? "−" : "") + sym + s;
+  }
+
+  function compute() {
+    const N = num("machines"), daily = num("daily"), days = num("days");
+    const margin = num("margin") / 100, uplift = num("uplift") / 100, share = num("share") / 100;
+    const handling = num("handling"), hardware = num("hardware"), service = num("service"), fee = num("fee") / 100;
+    const base = N * daily * days;
+    const newSales = base * (1 + uplift);
+    const extraProfit = base * uplift * margin;
+    const cashSaved = N * handling;
+    const procFees = newSales * share * fee;
+    const svcFees = N * service;
+    const net = extraProfit + cashSaved - procFees - svcFees;
+    const upfront = N * hardware;
+    const payback = net > 0 ? upfront / net : Infinity;
+    const threeYear = net * 36 - upfront;
+    return { N, base, extraProfit, cashSaved, procFees, svcFees, net, upfront, payback, threeYear };
+  }
+
+  function drawChart(r) {
+    const svg = el("chart");
+    const W = 560, H = 220, L = 64, R = 14, T = 12, B = 30;
+    const pts = [];
+    for (let m = 0; m <= 36; m++) pts.push(r.net * m - r.upfront);
+    let lo = Math.min(0, ...pts), hi = Math.max(0, ...pts);
+    if (hi === lo) { hi = lo + 1; }
+    const pad = (hi - lo) * 0.08; lo -= pad; hi += pad;
+    const x = m => L + (m / 36) * (W - L - R);
+    const y = v => T + (1 - (v - lo) / (hi - lo)) * (H - T - B);
+    const css = getComputedStyle(document.documentElement);
+    const grid = css.getPropertyValue("--display-grid").trim();
+    const dim = css.getPropertyValue("--display-dim").trim();
+    const coin = css.getPropertyValue("--display-coin").trim();
+    const ink = css.getPropertyValue("--display-ink").trim();
+
+    // nice ticks
+    const span = hi - lo, raw = span / 4, mag = Math.pow(10, Math.floor(Math.log10(raw)));
+    const step = [1, 2, 2.5, 5, 10].map(s => s * mag).find(s => s >= raw) || raw;
+    const ticks = [];
+    for (let v = Math.ceil(lo / step) * step; v <= hi; v += step) ticks.push(v);
+
+    const short = v => {
+      const a = Math.abs(v);
+      const t = a >= 1e6 ? (a / 1e6).toFixed(a >= 1e7 ? 0 : 1) + "M" : a >= 1e3 ? (a / 1e3).toFixed(a >= 1e4 ? 0 : 1) + "k" : a.toFixed(0);
+      return (v < 0 ? "−" : "") + sym + t;
+    };
+
+    let s = "";
+    ticks.forEach(v => {
+      s += `<line x1="${L}" x2="${W - R}" y1="${y(v)}" y2="${y(v)}" stroke="${grid}" stroke-width="1"/>`;
+      s += `<text x="${L - 8}" y="${y(v) + 4}" text-anchor="end" font-family="IBM Plex Mono, monospace" font-size="11" fill="${dim}">${short(v)}</text>`;
+    });
+    [0, 12, 24, 36].forEach(m => {
+      s += `<text x="${x(m)}" y="${H - 8}" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="11" fill="${dim}">${m === 0 ? "Start" : "Month " + m}</text>`;
+    });
+    s += `<line x1="${L}" x2="${W - R}" y1="${y(0)}" y2="${y(0)}" stroke="${dim}" stroke-width="1" stroke-dasharray="3 3"/>`;
+    const path = pts.map((v, m) => (m ? "L" : "M") + x(m).toFixed(1) + " " + y(v).toFixed(1)).join(" ");
+    const area = path + ` L${x(36).toFixed(1)} ${y(0).toFixed(1)} L${x(0).toFixed(1)} ${y(0).toFixed(1)} Z`;
+    s += `<path d="${area}" fill="${coin}" fill-opacity="0.12"/>`;
+    s += `<path d="${path}" fill="none" stroke="${coin}" stroke-width="2.5" stroke-linejoin="round"/>`;
+    if (Number.isFinite(r.payback) && r.payback <= 36) {
+      const px = x(r.payback), py = y(0);
+      s += `<circle cx="${px}" cy="${py}" r="5" fill="${coin}" stroke="${ink}" stroke-width="1.5"/>`;
+      const anchor = px > W - 120 ? "end" : "start";
+      const tx = anchor === "end" ? px - 8 : px + 8;
+      s += `<text x="${tx}" y="${py - 10}" text-anchor="${anchor}" font-family="IBM Plex Sans, sans-serif" font-size="12" font-weight="600" fill="${ink}">Paid back</text>`;
+    }
+    const endV = pts[36];
+    s += `<circle cx="${x(36)}" cy="${y(endV)}" r="4" fill="${coin}"/>`;
+    svg.innerHTML = s;
+  }
+
+  function render() {
+    const r = compute();
+    const pb = el("pb"), unit = el("pb-unit"), verdict = el("verdict");
+    if (!Number.isFinite(r.payback)) {
+      pb.textContent = "Never"; unit.textContent = "";
+      verdict.textContent = "With these figures the readers cost more each month than they bring in. Check the sales increase and the fees.";
+    } else if (r.payback < 1) {
+      pb.textContent = "< 1"; unit.textContent = "month";
+      verdict.textContent = "The readers pay for themselves within the first month.";
+    } else {
+      pb.textContent = r.payback.toFixed(1); unit.textContent = "months";
+      verdict.textContent = r.payback <= 12 ? "The readers pay for themselves within the first year."
+        : r.payback <= 36 ? "The readers pay for themselves within three years."
+        : "Payback takes longer than three years with these figures.";
+    }
+    const set = (id, v, cls) => { const e = el(id); e.textContent = money(v); e.className = "v" + (cls ? " " + cls : ""); };
+    set("k-month", r.net, r.net >= 0 ? "pos" : "neg");
+    set("k-upfront", r.upfront);
+    set("k-3y", r.threeYear, r.threeYear >= 0 ? "pos" : "neg");
+    el("b-profit").textContent = "+" + money(r.extraProfit);
+    el("b-handling").textContent = "+" + money(r.cashSaved);
+    el("b-fees").textContent = money(-r.procFees);
+    el("b-service").textContent = money(-r.svcFees);
+    el("b-net").textContent = money(r.net);
+    drawChart(r);
+    return r;
+  }
+
+  function summary() {
+    const r = compute();
+    const pbText = !Number.isFinite(r.payback) ? "not reached with these figures"
+      : r.payback < 1 ? "under 1 month" : r.payback.toFixed(1) + " months";
+    return [
+      "Business case: card and phone payments for your vending fleet",
+      "",
+      "Based on " + r.N + " machines and current sales of " + money(r.base) + " per month:",
+      "",
+      "• Net gain per month: " + money(r.net),
+      "• Upfront investment: " + money(r.upfront),
+      "• Payback period: " + pbText,
+      "• Net gain after 3 years: " + money(r.threeYear),
+      "",
+      "Assumptions: " + num("uplift") + "% sales increase, " + num("share") + "% of sales paid by card or phone, " +
+        num("margin") + "% gross margin, " + num("fee") + "% processing fee, " + money(num("service"), 2) + " service fee per reader per month.",
+      "",
+      "Happy to walk through these figures with your own data from a pilot."
+    ].join("\n");
+  }
+
+  ids.forEach(id => el(id).addEventListener("input", render));
+  el("currency").addEventListener("change", e => {
+    sym = e.target.value;
+    document.querySelectorAll(".cur-sym").forEach(s => s.textContent = sym);
+    render();
+  });
+  el("form").addEventListener("submit", e => e.preventDefault());
+
+  el("copy").addEventListener("click", () => {
+    const text = summary();
+    const done = () => { const c = el("copied"); c.hidden = false; setTimeout(() => { c.hidden = true; }, 2200); };
+    const fallback = () => { const t = el("fallback"); t.value = text; t.hidden = false; t.focus(); t.select(); };
+    try {
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(done, fallback);
+      } else { fallback(); }
+    } catch (err) { fallback(); }
+  });
+
+  if (window.matchMedia) {
+    const mq = window.matchMedia("(prefers-color-scheme: dark)");
+    if (mq.addEventListener) mq.addEventListener("change", render);
+  }
+  new MutationObserver(render).observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
+
+  window.__payback = { compute, summary };
+  render();
+})();
+</script>

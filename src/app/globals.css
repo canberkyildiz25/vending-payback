@@ -1,0 +1,150 @@
+/* Hallmark · macrostructure: Workbench (worksheet + sticky machine display) · tone: utilitarian
+ * theme: studied-DNA (source: legacy/v1.html) · paper #eef1f4 · accent cobalt #2346c4 + brass #c98300
+ * display: Archivo (condensed widths) · body: IBM Plex Sans · figures: IBM Plex Mono
+ */
+@import "tailwindcss";
+
+/* ---- tokens (carried over from v1) ---- */
+:root {
+  --bg: #eef1f4;
+  --panel: #ffffff;
+  --ink: #15212c;
+  --muted: #5b6b79;
+  --line: #d3dae1;
+  --accent: #2346c4; /* cobalt: actions, focus */
+  --coin: #9a6400; /* brass, darkened from v1 for text contrast on white */
+  --gain: #1d7a4f;
+  --loss: #b3372b;
+  --display-bg: #121b24; /* the result panel reads like a vending display */
+  --display-ink: #e9f0f5;
+  --display-dim: #8fa3b3;
+  --display-coin: #f2b544;
+  --display-cobalt: #93a8ff;
+  --display-grid: #26333f;
+  --display-pos: #6fdca5;
+  --display-neg: #ff9a8c;
+
+  /* the client proposal is always a sheet of paper, whatever the theme */
+  --paper: #fbfaf7;
+  --paper-ink: #15212c;
+  --paper-muted: #55636f;
+  --paper-line: #d9dcd8;
+  --paper-coin: #9a6400;
+  --paper-accent: #2346c4;
+
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0d141b; --panel: #15202a; --ink: #e4ebf1; --muted: #93a4b3; --line: #2a3845;
+    --accent: #8ea4ff; --coin: #f0b44a; --gain: #4fc58c; --loss: #f07a6c;
+    --display-bg: #070c11; --display-ink: #eef4f8; --display-dim: #8397a7; --display-coin: #f5bd55; --display-grid: #1c2833;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0d141b; --panel: #15202a; --ink: #e4ebf1; --muted: #93a4b3; --line: #2a3845;
+  --accent: #8ea4ff; --coin: #f0b44a; --gain: #4fc58c; --loss: #f07a6c;
+  --display-bg: #070c11; --display-ink: #eef4f8; --display-dim: #8397a7; --display-coin: #f5bd55; --display-grid: #1c2833;
+  color-scheme: dark;
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-panel: var(--panel);
+  --color-ink: var(--ink);
+  --color-muted: var(--muted);
+  --color-line: var(--line);
+  --color-accent: var(--accent);
+  --color-coin: var(--coin);
+  --color-gain: var(--gain);
+  --color-loss: var(--loss);
+  --color-display: var(--display-bg);
+  --color-display-ink: var(--display-ink);
+  --color-display-dim: var(--display-dim);
+  --color-display-coin: var(--display-coin);
+  --color-display-grid: var(--display-grid);
+  --color-display-pos: var(--display-pos);
+  --color-display-neg: var(--display-neg);
+  --color-paper: var(--paper);
+  --color-paper-ink: var(--paper-ink);
+  --color-paper-muted: var(--paper-muted);
+  --color-paper-line: var(--paper-line);
+  --color-paper-coin: var(--paper-coin);
+  --color-paper-accent: var(--paper-accent);
+
+  --font-display: var(--font-archivo), "Arial Narrow", system-ui, sans-serif;
+  --font-sans: var(--font-plex-sans), system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: var(--font-plex-mono), ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+
+/* ---- base ---- */
+html, body { overflow-x: clip; }
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-sans);
+  font-size: 15px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.display :focus-visible { outline-color: var(--display-coin); }
+/* in the components layer so Tailwind utilities can override size and colour */
+@layer components {
+.num { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+
+/* condensed Archivo for labels and headings */
+.label-caps {
+  font-family: var(--font-display); font-weight: 700; font-stretch: 90%;
+  font-size: 12px; letter-spacing: .1em; text-transform: uppercase;
+}
+
+/* the old "exact change only" sticker, crossed out */
+.sticker {
+  font-family: var(--font-display); font-weight: 800; font-stretch: 75%;
+  font-size: 12px; letter-spacing: .12em; text-transform: uppercase;
+  border: 2px solid var(--ink); padding: 3px 8px; position: relative;
+}
+.sticker::after {
+  content: ""; position: absolute; left: -4px; right: -4px; top: 50%;
+  height: 2px; background: var(--loss); transform: rotate(-4deg);
+}
+
+/* ---- number inputs ---- */
+.inp { position: relative; display: flex; align-items: center; min-width: 0; }
+.inp input {
+  width: 100%; min-width: 0; font: 500 15px var(--font-mono); font-variant-numeric: tabular-nums; text-align: right;
+  color: var(--ink); background: var(--bg); border: 1px solid var(--line); border-radius: 6px;
+  padding: 8px 10px; transition: border-color 150ms var(--ease-out);
+}
+.inp input:hover { border-color: var(--muted); }
+.inp input:focus-visible { border-color: var(--accent); outline-offset: 1px; }
+.inp input[aria-invalid="true"] { border-color: var(--loss); }
+.inp.has-unit input { padding-right: 30px; }
+.inp.has-prefix input { padding-left: 26px; }
+.inp .unit, .inp .prefix { position: absolute; font: 500 12px var(--font-mono); color: var(--muted); pointer-events: none; }
+.inp .unit { right: 9px; }
+.inp .prefix { left: 9px; font-size: 13px; }
+
+} /* end @layer components */
+
+/* ---- chart series, defined per surface ---- */
+.display { --series-conservative: var(--display-dim); --series-realistic: var(--display-coin); --series-optimistic: var(--display-cobalt);
+  --chart-grid: var(--display-grid); --chart-dim: var(--display-dim); --chart-ink: var(--display-ink); --chart-bg: var(--display-bg); }
+.sheet-paper { --series-conservative: #7d8a95; --series-realistic: var(--paper-coin); --series-optimistic: var(--paper-accent);
+  --chart-grid: var(--paper-line); --chart-dim: var(--paper-muted); --chart-ink: var(--paper-ink); --chart-bg: var(--paper); }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { transition-duration: 0ms !important; animation: none !important; }
+}
+
+/* ---- print: the proposal sheet only ---- */
+@page { size: A4; margin: 14mm; }
+@media print {
+  html, body { background: #fff !important; }
+  .no-print { display: none !important; }
+  .sheet-paper { background: #fff !important; box-shadow: none !important; border: 0 !important; padding: 0 !important; max-width: none !important; }
+  .print-avoid-break { break-inside: avoid; }
+  a { color: inherit; text-decoration: none; }
+}
