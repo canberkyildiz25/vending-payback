@@ -16,44 +16,39 @@ export default async function Home({ searchParams }: { searchParams: Promise<Sea
     <main className="mx-auto flex max-w-[1120px] flex-col gap-8 px-4 pt-5 pb-10">
       <TopBar t={t} page="calculator" />
 
-      <header className="grid items-center gap-6 lg:grid-cols-[minmax(0,1.3fr)_minmax(0,1fr)]">
-        <div className="flex min-w-0 flex-col gap-3">
-          <h1 className="m-0 font-display text-[clamp(32px,5.4vw,56px)] leading-[1.02] font-extrabold tracking-[-.015em] text-balance [overflow-wrap:anywhere] [font-stretch:80%]">
-            {t.header.title}
-          </h1>
-          <p className="m-0 max-w-[60ch] text-[15.5px] text-muted">{t.header.lede}</p>
-          <div className="flex flex-wrap items-center gap-x-4 gap-y-2 pt-1">
-            <Link href="/case" className="inline-flex min-h-11 items-center rounded-md bg-ink px-4 text-sm font-semibold whitespace-nowrap text-panel no-underline transition-opacity duration-150 hover:opacity-90 active:opacity-80">
-              {t.sales.cta.caseStudy}
-            </Link>
-            <Link href="/meeting" className="inline-flex min-h-11 items-center rounded-md border border-line px-4 text-sm font-semibold whitespace-nowrap text-ink no-underline hover:border-muted">
-              {t.sales.cta.meeting}
-            </Link>
+      <header className="on-cabinet flex flex-col gap-7">
+        <h1 className="fascia m-0">{t.header.title}</h1>
+        <div className="grid items-end gap-x-10 gap-y-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
+          <div className="flex min-w-0 flex-col gap-4">
+            <p className="m-0 max-w-[58ch] text-[16px]">{t.header.lede}</p>
+            <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
+              <Link href="/case" className="key-brass">
+                {t.sales.cta.caseStudy}
+              </Link>
+              <Link href="/meeting" className="inline-flex min-h-12 items-center border border-line px-4 text-sm font-semibold whitespace-nowrap text-ink no-underline hover:border-ink">
+                {t.sales.cta.meeting}
+              </Link>
+            </div>
           </div>
+          <figure className="shelf m-0 flex min-w-0 flex-col">
+            <Image src={hero} alt={t.header.heroAlt} priority placeholder="blur" sizes="(min-width: 1024px) 520px, 100vw" className="aspect-[21/9] h-auto w-full object-cover" />
+            <figcaption className="rail">{t.header.heroCaption}</figcaption>
+          </figure>
         </div>
-        <figure className="m-0 flex min-w-0 flex-col gap-2">
-          <Image
-            src={hero}
-            alt={t.header.heroAlt}
-            priority
-            placeholder="blur"
-            sizes="(min-width: 1024px) 440px, 100vw"
-            className="aspect-[16/9] h-auto w-full rounded-[10px] object-cover"
-          />
-          <figcaption className="num text-[12px] text-muted">{t.header.heroCaption}</figcaption>
-        </figure>
       </header>
 
       <Calculator initial={initial} />
 
-      <section className="grid gap-5 rounded-[10px] border border-line bg-panel px-5 py-6 sm:px-7 lg:grid-cols-[minmax(0,1fr)_minmax(0,2fr)]" aria-labelledby="method-head">
-        <div className="flex flex-col gap-2">
-          <h2 id="method-head" className="m-0 font-display text-[22px] leading-tight font-extrabold [font-stretch:85%]">
+      <section className="grid items-start gap-x-10 gap-y-5 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.5fr)]" aria-labelledby="method-head">
+        <div className="on-cabinet flex flex-col gap-3">
+          <h2 id="method-head" className="sign m-0 text-[clamp(30px,4.4vw,46px)]">
             {t.method.title}
           </h2>
           <p className="m-0 max-w-[48ch] text-sm text-muted">{t.method.note}</p>
         </div>
-        <MethodList t={t} />
+        <div className="receipt">
+          <MethodList t={t} />
+        </div>
       </section>
 
       <SiteFooter t={t} />

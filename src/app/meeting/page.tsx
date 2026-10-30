@@ -16,8 +16,8 @@ export default async function MeetingPage({ searchParams }: { searchParams: Prom
   return (
     <main className="mx-auto flex max-w-[1120px] flex-col gap-6 px-4 pt-5 pb-10">
       <TopBar t={t} page="meeting" />
-      <header className="flex flex-col gap-2">
-        <h1 className="m-0 font-display text-[clamp(30px,4.6vw,46px)] leading-[1.04] font-extrabold tracking-[-.01em] [font-stretch:80%]">{t.sales.meeting.title}</h1>
+      <header className="on-cabinet flex flex-col gap-3">
+        <h1 className="fascia m-0 text-[clamp(50px,9vw,104px)]">{t.sales.meeting.title}</h1>
         <p className="m-0 max-w-[62ch] text-muted">{t.sales.meeting.intro}</p>
       </header>
       <Meeting initial={initial} />

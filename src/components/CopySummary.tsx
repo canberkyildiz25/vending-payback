@@ -36,11 +36,11 @@ export function CopySummary({ state }: { state: CalcState }) {
       <button
         type="button"
         onClick={copy}
-        className="inline-flex min-h-11 cursor-pointer items-center rounded-md border border-display-grid bg-transparent px-4 text-sm font-semibold whitespace-nowrap text-display-ink transition-colors duration-150 hover:border-display-dim active:bg-white/[.06]"
+        className="inline-flex min-h-11 cursor-pointer items-center border border-line bg-transparent px-4 text-sm font-semibold whitespace-nowrap text-ink transition-colors duration-150 hover:border-ink active:bg-white/[.1]"
       >
         {t.display.copy}
       </button>
-      <span className="text-[13px] text-display-pos" role="status">
+      <span className="text-[13px] text-coin" role="status">
         {copied ? t.display.copied : ""}
       </span>
       {fallback !== null && (
@@ -49,7 +49,7 @@ export function CopySummary({ state }: { state: CalcState }) {
           readOnly
           value={fallback}
           aria-label={t.display.summaryAria}
-          className="num min-h-40 w-full basis-full rounded-md border-0 bg-display-grid p-2.5 text-[13px] text-display-ink"
+          className="num min-h-40 w-full basis-full border-0 bg-display-grid p-2.5 text-[13px] text-display-ink"
         />
       )}
     </>

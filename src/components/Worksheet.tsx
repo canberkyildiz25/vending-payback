@@ -30,16 +30,12 @@ function Tag({ children }: { children: ReactNode }) {
 }
 
 export function Legend({ children }: { children: ReactNode }) {
-  return (
-    <legend className="mb-1 w-full border-b border-line pb-2 font-display text-[17px] leading-tight font-bold [font-stretch:88%]">
-      {children}
-    </legend>
-  );
+  return <legend className="band mb-1">{children}</legend>;
 }
 
 export function Row({ id, label, hint, children }: { id: string; label: ReactNode; hint?: string; children: ReactNode }) {
   return (
-    <div className="grid grid-cols-[minmax(0,1fr)_minmax(0,128px)] items-center gap-3">
+    <div className="grid grid-cols-[minmax(0,1fr)_minmax(0,128px)] items-center gap-3 border-b border-line pb-2.5 last:border-b-0 last:pb-0">
       <label htmlFor={id} className="text-sm leading-snug">
         {label}
         {hint && <small className="block text-xs text-muted">{hint}</small>}
@@ -49,29 +45,57 @@ export function Row({ id, label, hint, children }: { id: string; label: ReactNod
   );
 }
 
-export function PresetTiles({ state, onPreset }: Pick<Props, "state" | "onPreset">) {
+/** The machine's window: each location type is a product behind glass, with a price rail under it. */
+export function PresetTiles({ state, onPreset, wide = false }: Pick<Props, "state" | "onPreset"> & { wide?: boolean }) {
   const { t } = useI18n(state.currency);
   return (
-    <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
-      {PRESET_IDS.map((id) => (
-        <label
-          key={id}
-          className="group relative flex min-w-0 cursor-pointer flex-col overflow-hidden rounded-md border border-line bg-bg transition-colors duration-150 hover:border-muted has-checked:border-ink has-checked:ring-1 has-checked:ring-ink has-focus-visible:outline-2 has-focus-visible:outline-offset-2 has-focus-visible:outline-accent"
-        >
+    <div className={`shelf grid grid-cols-2 gap-2 sm:grid-cols-3 ${wide ? "lg:grid-cols-6" : ""}`}>
+      {PRESET_IDS.map((id, i) => (
+        <label key={id} className="slot group flex min-w-0 cursor-pointer flex-col has-focus-visible:outline-2 has-focus-visible:outline-offset-2 has-focus-visible:outline-display-coin">
           <input type="radio" name="preset" value={id} checked={state.preset === id} onChange={() => onPreset(id)} className="sr-only" />
           <Image
             src={PHOTO[id]}
             alt=""
-            sizes="(min-width: 640px) 160px, 45vw"
+            sizes={wide ? "(min-width: 1024px) 180px, (min-width: 640px) 33vw, 50vw" : "(min-width: 640px) 200px, 45vw"}
             placeholder="blur"
-            className="aspect-[16/9] h-auto w-full object-cover grayscale transition-[filter] duration-200 group-hover:grayscale-0 group-has-checked:grayscale-0"
+            className="aspect-[4/3] h-auto w-full object-cover opacity-70 grayscale transition-[filter,opacity] duration-200 group-hover:opacity-100 group-hover:grayscale-0 group-has-checked:opacity-100 group-has-checked:grayscale-0"
           />
-          <span className="flex min-h-10 items-center px-2.5 py-1.5 text-[13px] leading-tight font-semibold group-has-checked:bg-ink group-has-checked:text-panel">
-            {t.presets[id].label}
+          <span className="rail">
+            <b>{11 + i}</b>
+            <span className="min-w-0 hyphens-auto [overflow-wrap:anywhere]">{t.presets[id].label}</span>
           </span>
         </label>
       ))}
     </div>
+  );
+}
+
+/** The window plus the note on what the example values are. */
+export function PresetShelf({ state, onPreset, onCurrency }: Pick<Props, "state" | "onPreset" | "onCurrency">) {
+  const { t } = useI18n(state.currency);
+  const p = t.presets[state.preset];
+  return (
+    <section className="flex min-w-0 flex-col gap-4" aria-labelledby="shelf-head">
+      <h2 id="shelf-head" className="on-cabinet sign m-0 text-[clamp(26px,3.6vw,38px)]">
+        {t.sheet.startFrom}
+      </h2>
+      <PresetTiles state={state} onPreset={onPreset} wide />
+      <div className="on-cabinet flex flex-wrap items-center justify-between gap-3 pt-1">
+        <p className="m-0 max-w-[70ch] text-[13.5px] text-muted" aria-live="polite">
+          <strong className="font-semibold text-ink">{t.sheet.exampleFor(p.phrase)}</strong> {t.sheet.replace} {p.hint}
+        </p>
+        <label className="flex items-center gap-2 text-[13px] text-muted" htmlFor="currency">
+          {t.sheet.currency}
+          <select id="currency" value={state.currency} onChange={(e) => onCurrency(e.target.value as Currency)} className="min-h-9 cursor-pointer border border-line bg-bg px-2 py-1.5 text-sm text-ink">
+            {CURRENCIES.map((c) => (
+              <option key={c} value={c}>
+                {c}
+              </option>
+            ))}
+          </select>
+        </label>
+      </div>
+    </section>
   );
 }
 
@@ -138,40 +162,14 @@ export function EstimatesGrid({ state, onScenario }: Pick<Props, "state" | "onSc
   );
 }
 
-export function Worksheet({ state, onPreset, onCurrency, onFleet, onScenario }: Props) {
+export function Worksheet({ state, onFleet, onScenario }: Pick<Props, "state" | "onFleet" | "onScenario">) {
   const { fleet } = state;
   const { t, fmt } = useI18n(state.currency);
   const sym = fmt.symbol;
   const f = (k: keyof FleetInputs) => ({ value: fleet[k], onChange: (v: number) => onFleet(k, v) });
-  const p = t.presets[state.preset];
 
   return (
-    <form className="flex min-w-0 flex-col gap-7 rounded-[10px] border border-line bg-panel p-5 sm:p-6" noValidate onSubmit={(e) => e.preventDefault()} aria-label={t.sheet.aria}>
-      <fieldset className="m-0 flex min-w-0 flex-col gap-3 border-0 p-0">
-        <Legend>{t.sheet.startFrom}</Legend>
-        <PresetTiles state={state} onPreset={onPreset} />
-        <div className="flex flex-wrap items-end justify-between gap-3">
-          <p className="m-0 max-w-[46ch] text-[13px] text-muted" aria-live="polite">
-            <strong className="font-semibold text-ink">{t.sheet.exampleFor(p.phrase)}</strong> {t.sheet.replace} {p.hint}
-          </p>
-          <label className="flex items-center gap-2 text-[13px] text-muted" htmlFor="currency">
-            {t.sheet.currency}
-            <select
-              id="currency"
-              value={state.currency}
-              onChange={(e) => onCurrency(e.target.value as Currency)}
-              className="min-h-9 cursor-pointer rounded-md border border-line bg-bg px-2 py-1.5 text-sm text-ink hover:border-muted"
-            >
-              {CURRENCIES.map((c) => (
-                <option key={c} value={c}>
-                  {c}
-                </option>
-              ))}
-            </select>
-          </label>
-        </div>
-      </fieldset>
-
+    <form className="flex min-w-0 flex-col gap-7 bg-panel p-5 sm:p-6" noValidate onSubmit={(e) => e.preventDefault()} aria-label={t.sheet.aria}>
       <fieldset className="m-0 flex min-w-0 flex-col gap-3 border-0 p-0">
         <Legend>{t.sheet.fleetToday}</Legend>
         <Row id="machines" label={t.sheet.machines}>

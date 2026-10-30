@@ -30,14 +30,14 @@ export function Insights({ state, t, fmt }: { state: CalcState; t: Messages; fmt
         <p className="m-0 text-[13.5px]" aria-live="polite">
           {delay > 0 ? I.delayBody(fmt.money(delay), months) : I.delayNone}
         </p>
-        <div className="mt-1 flex flex-wrap gap-1.5" role="group" aria-label={I.delayChoose}>
+        <div className="mt-1 grid grid-cols-3 gap-1" role="group" aria-label={I.delayChoose}>
           {DELAYS.map((n) => (
             <button
               key={n}
               type="button"
               aria-pressed={n === months}
               onClick={() => setMonths(n)}
-              className={`min-h-9 cursor-pointer rounded-md border px-2.5 text-xs font-semibold whitespace-nowrap transition-colors duration-150 ${
+              className={`min-h-9 cursor-pointer border px-1 text-[11px] font-semibold whitespace-nowrap transition-colors duration-150 ${
                 n === months ? "border-display-coin text-display-coin" : "border-display-grid text-display-dim hover:border-display-dim"
               }`}
             >

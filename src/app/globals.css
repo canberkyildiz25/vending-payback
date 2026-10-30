@@ -1,53 +1,56 @@
-/* Hallmark · macrostructure: Workbench (worksheet + sticky machine display) · tone: utilitarian
- * theme: studied-DNA (source: legacy/v1.html) · paper #eef1f4 · accent cobalt #2346c4 + brass #c98300
- * display: Archivo (condensed widths) · body: IBM Plex Sans · figures: IBM Plex Mono
+/* Hallmark · macrostructure: bespoke, the page is a vending machine · tone: industrial, printed, physical
+ * theme: custom (vibe: "enamel cabinet, printed route sheet, till receipt")
+ * cabinet cobalt #1b37a3 · paper #f3efe4 · brass #f2b544 · Archivo (62–90 width) + IBM Plex Sans + IBM Plex Mono
+ * pre-emit critique: P5 H4 E4 S5 R4 V5
  */
 @import "tailwindcss";
 
-/* ---- tokens (carried over from v1) ---- */
+/* Defaults describe printed paper. .on-cabinet re-points them for text painted on the enamel. */
 :root {
-  --bg: #eef1f4;
-  --panel: #ffffff;
-  --ink: #15212c;
-  --muted: #5b6b79;
-  --line: #d3dae1;
-  --accent: #2346c4; /* cobalt: actions, focus */
-  --coin: #9a6400; /* brass, darkened from v1 for text contrast on white */
+  --cabinet: #1b37a3;
+  --cabinet-deep: #142a80;
+  --bg: #fbf8f0;
+  --panel: #f3efe4;
+  --ink: #17202b;
+  --muted: #56606a;
+  --line: #c9c2b0;
+  --accent: #1b37a3;
+  --coin: #855700;
   --gain: #1d7a4f;
-  --loss: #b3372b;
-  --display-bg: #121b24; /* the result panel reads like a vending display */
-  --display-ink: #e9f0f5;
-  --display-dim: #8fa3b3;
+  --loss: #a93226;
+  --display-bg: #0a0d10;
+  --display-ink: #eef1ee;
+  --display-dim: #929da3;
   --display-coin: #f2b544;
   --display-cobalt: #93a8ff;
-  --display-grid: #26333f;
+  --display-grid: #272c31;
   --display-pos: #6fdca5;
   --display-neg: #ff9a8c;
+  --metal: #2b2f35;
+  --metal-hi: #474d55;
+  --metal-lo: #15181b;
 
   /* the client proposal is always a sheet of paper, whatever the theme */
   --paper: #fbfaf7;
   --paper-ink: #15212c;
   --paper-muted: #55636f;
   --paper-line: #d9dcd8;
-  --paper-coin: #9a6400;
-  --paper-accent: #2346c4;
+  --paper-coin: #855700;
+  --paper-accent: #1b37a3;
   --paper-gain: #1d7a4f;
 
   --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
 }
+/* Paper stays paper in the dark; only the room around it dims. */
 @media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) {
-    --bg: #0d141b; --panel: #15202a; --ink: #e4ebf1; --muted: #93a4b3; --line: #2a3845;
-    --accent: #8ea4ff; --coin: #f0b44a; --gain: #4fc58c; --loss: #f07a6c;
-    --display-bg: #070c11; --display-ink: #eef4f8; --display-dim: #8397a7; --display-coin: #f5bd55; --display-grid: #1c2833;
-    color-scheme: dark;
-  }
+  :root:not([data-theme="light"]) { --cabinet: #101f63; --cabinet-deep: #0b1648; }
 }
-:root[data-theme="dark"] {
-  --bg: #0d141b; --panel: #15202a; --ink: #e4ebf1; --muted: #93a4b3; --line: #2a3845;
-  --accent: #8ea4ff; --coin: #f0b44a; --gain: #4fc58c; --loss: #f07a6c;
-  --display-bg: #070c11; --display-ink: #eef4f8; --display-dim: #8397a7; --display-coin: #f5bd55; --display-grid: #1c2833;
-  color-scheme: dark;
+:root[data-theme="dark"] { --cabinet: #101f63; --cabinet-deep: #0b1648; }
+
+.on-cabinet {
+  --ink: #f6f2e7; --muted: #cdd5f5; --line: #5a70c8; --accent: #f2b544; --coin: #f2b544;
+  --panel: var(--cabinet-deep); --bg: var(--cabinet-deep);
+  color: var(--ink); color-scheme: dark;
 }
 
 @theme inline {
@@ -83,7 +86,7 @@
 /* ---- base ---- */
 html, body { overflow-x: clip; }
 body {
-  background: var(--bg);
+  background: var(--cabinet);
   color: var(--ink);
   font-family: var(--font-sans);
   font-size: 15px;
@@ -91,7 +94,7 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
-.display :focus-visible { outline-color: var(--display-coin); }
+.display :focus-visible, .on-cabinet :focus-visible, .shelf :focus-visible { outline-color: var(--display-coin); }
 /* in the components layer so Tailwind utilities can override size and colour */
 @layer components {
 .num { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
@@ -102,31 +105,90 @@ body {
   font-size: 12px; letter-spacing: .1em; text-transform: uppercase;
 }
 
-/* the old "exact change only" sticker, crossed out */
+/* the old "cash only" sticker, crossed out */
 .sticker {
   font-family: var(--font-display); font-weight: 800; font-stretch: 75%;
-  font-size: 12px; letter-spacing: .12em; text-transform: uppercase;
-  border: 2px solid var(--ink); padding: 3px 8px; position: relative;
+  font-size: 13px; letter-spacing: .1em; text-transform: uppercase; white-space: nowrap;
+  background: #f6f2e7; color: #17202b; padding: 5px 12px; position: relative; transform: rotate(-3deg);
 }
 .sticker::after {
-  content: ""; position: absolute; left: -4px; right: -4px; top: 50%;
-  height: 2px; background: var(--loss); transform: rotate(-4deg);
+  content: ""; position: absolute; left: -5px; right: -5px; top: 50%;
+  height: 3px; background: #c6362a; transform: rotate(-5deg);
 }
+
+/* signage painted on the cabinet */
+.fascia {
+  font-family: var(--font-display); font-weight: 900; font-stretch: 62%;
+  text-transform: uppercase; line-height: .92; letter-spacing: -.005em;
+  font-size: clamp(50px, 11.2vw, 132px);
+  overflow-wrap: anywhere;
+}
+.sign {
+  font-family: var(--font-display); font-weight: 800; font-stretch: 68%;
+  text-transform: uppercase; line-height: 1; letter-spacing: 0;
+}
+
+/* section band on the printed form */
+.band {
+  display: block; width: 100%; background: var(--ink); color: var(--panel); padding: 5px 10px;
+  font-family: var(--font-display); font-weight: 700; font-stretch: 78%;
+  font-size: 15px; letter-spacing: .05em; text-transform: uppercase;
+}
+
+/* physical keys */
+.key-brass {
+  display: inline-flex; align-items: center; min-height: 48px; padding: 0 18px; cursor: pointer;
+  background: #f2b544; color: #1b1404; font-weight: 600; font-size: 14px; white-space: nowrap; text-decoration: none; border: 0;
+  box-shadow: inset 0 1px 0 #ffdf9e, inset 0 -3px 0 #b57f1c;
+  transition: background-color 120ms var(--ease-out);
+}
+.key-brass:hover { background: #f8c766; }
+.key-brass:active { box-shadow: inset 0 3px 0 #b57f1c; }
+.key-metal {
+  background: var(--metal); color: var(--display-ink); cursor: pointer; border: 0;
+  box-shadow: inset 0 1px 0 var(--metal-hi), inset 0 -3px 0 var(--metal-lo);
+  transition: background-color 120ms var(--ease-out);
+}
+.key-metal:hover { background: #363b42; }
+.key-metal:active, .key-metal[aria-pressed="true"] { background: #1c1f23; box-shadow: inset 0 3px 0 #08090a; }
+
+/* the machine's window: photos behind glass, price rail under each */
+.shelf { background: #0a0d10; padding: 10px; box-shadow: inset 0 0 0 2px var(--metal), 0 0 0 6px var(--cabinet-deep); }
+.rail {
+  display: flex; align-items: center; gap: 8px; min-height: 40px; padding: 4px 8px;
+  background: var(--metal); color: var(--display-ink); font-size: 13px; font-weight: 600; line-height: 1.15;
+  box-shadow: inset 0 1px 0 var(--metal-hi);
+}
+.rail b { font: 600 11px var(--font-mono); background: #f6f2e7; color: #17202b; padding: 1px 4px; }
+.slot:has(input:checked) .rail { background: #f2b544; color: #1b1404; box-shadow: none; }
+
+/* the display, set in a metal bezel */
+.display { border: 8px solid var(--metal); box-shadow: 0 0 0 1px var(--metal-hi), inset 0 0 40px #000; }
+.lcd { color: var(--display-coin); text-shadow: 0 0 22px rgb(242 181 68 / .3); }
+
+/* till receipt, torn at the bottom */
+.receipt {
+  background: var(--bg); color: var(--ink); padding: 16px 18px 26px;
+  font-family: var(--font-mono); font-size: 13px;
+  mask: linear-gradient(#000 0 0) top / 100% calc(100% - 8px) no-repeat,
+        conic-gradient(from -45deg at bottom, #0000, #000 1deg 89deg, #0000 90deg) bottom / 16px 8px repeat-x;
+}
+.dispense { height: 12px; background: #050607; box-shadow: inset 0 3px 3px #000, 0 0 0 4px var(--metal); margin: 0 10px; }
 
 /* ---- number inputs ---- */
 .inp { position: relative; display: flex; align-items: center; min-width: 0; }
 .inp input {
-  width: 100%; min-width: 0; font: 500 15px var(--font-mono); font-variant-numeric: tabular-nums; text-align: right;
-  color: var(--ink); background: var(--bg); border: 1px solid var(--line); border-radius: 6px;
-  padding: 8px 10px; transition: border-color 150ms var(--ease-out);
+  width: 100%; min-width: 0; min-height: 40px; font: 500 15px var(--font-mono); font-variant-numeric: tabular-nums; text-align: right;
+  color: var(--ink); background: var(--bg); border: 1px solid var(--ink);
+  padding: 8px 10px;
 }
-.inp input:hover { border-color: var(--muted); }
-.inp input:focus-visible { border-color: var(--accent); outline-offset: 1px; }
+.inp input:hover { background: #fff8e3; }
+.inp input:focus-visible { background: #fff3cf; outline-offset: 1px; }
 .inp input[aria-invalid="true"] { border-color: var(--loss); }
 .inp.is-measured input { border-color: var(--gain); box-shadow: inset 3px 0 0 var(--gain); }
 .inp.has-unit input { padding-right: 30px; }
 .inp.has-prefix input { padding-left: 26px; }
-.inp .unit, .inp .prefix { position: absolute; font: 500 12px var(--font-mono); color: var(--muted); pointer-events: none; }
+.inp .unit, .inp .prefix { position: absolute; z-index: 1; font: 500 12px var(--font-mono); color: var(--muted); pointer-events: none; }
 .inp .unit { right: 9px; }
 .inp .prefix { left: 9px; font-size: 13px; }
 
@@ -146,6 +208,7 @@ body {
 @page { size: A4; margin: 14mm; }
 @media print {
   html, body { background: #fff !important; }
+  main { max-width: none !important; }
   .no-print { display: none !important; }
   .sheet-paper { background: #fff !important; box-shadow: none !important; border: 0 !important; padding: 0 !important; max-width: none !important; }
   .print-avoid-break { break-inside: avoid; }

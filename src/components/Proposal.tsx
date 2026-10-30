@@ -109,8 +109,8 @@ export function Proposal({ initial, initialClient, initialBy, initialDocLang }: 
     reader.readAsDataURL(file);
   };
 
-  const field = "min-h-10 w-full min-w-0 rounded-md border border-line bg-bg px-2.5 py-2 text-sm text-ink hover:border-muted focus-visible:border-accent";
-  const btn = "inline-flex min-h-10 cursor-pointer items-center rounded-md border border-line bg-bg px-3 text-sm font-semibold whitespace-nowrap text-ink hover:border-muted";
+  const field = "min-h-10 w-full min-w-0 border border-ink bg-bg px-2.5 py-2 text-sm text-ink hover:border-muted focus-visible:border-accent";
+  const btn = "inline-flex min-h-10 cursor-pointer items-center border border-ink bg-bg px-3 text-sm font-semibold whitespace-nowrap text-ink hover:border-muted";
 
   const f = state.fleet;
   const fleetRows: { k: keyof FleetInputs; value: string }[] = [
@@ -143,7 +143,7 @@ export function Proposal({ initial, initialClient, initialBy, initialDocLang }: 
 
   return (
     <main className="mx-auto flex max-w-[1120px] flex-col gap-6 px-4 pt-5 pb-10 print:p-0">
-      <section className="no-print flex flex-col gap-4 rounded-[10px] border border-line bg-panel p-5 sm:p-6" aria-labelledby="prep-head">
+      <section className="no-print flex flex-col gap-4 bg-panel p-5 sm:p-6" aria-labelledby="prep-head">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <h1 id="prep-head" className="m-0 font-display text-2xl font-extrabold [font-stretch:82%]">
             {U.title}
@@ -199,7 +199,7 @@ export function Proposal({ initial, initialClient, initialBy, initialDocLang }: 
             <select
               value={docLang}
               onChange={(e) => setDocLang(e.target.value as Lang)}
-              className="min-h-10 cursor-pointer rounded-md border border-line bg-bg px-2 text-sm text-ink hover:border-muted"
+              className="min-h-10 cursor-pointer border border-ink bg-bg px-2 text-sm text-ink hover:border-muted"
             >
               {LANGS.map((l) => (
                 <option key={l} value={l}>
@@ -211,7 +211,7 @@ export function Proposal({ initial, initialClient, initialBy, initialDocLang }: 
           <button
             type="button"
             onClick={() => window.print()}
-            className="inline-flex min-h-11 cursor-pointer items-center rounded-md bg-ink px-4 text-sm font-semibold whitespace-nowrap text-panel transition-opacity duration-150 hover:opacity-90 active:opacity-80"
+            className="inline-flex min-h-11 cursor-pointer items-center bg-ink px-4 text-sm font-semibold whitespace-nowrap text-panel transition-opacity duration-150 hover:opacity-90 active:opacity-80"
           >
             {U.print}
           </button>
@@ -221,7 +221,7 @@ export function Proposal({ initial, initialClient, initialBy, initialDocLang }: 
 
       <article
         lang={docLang}
-        className="sheet-paper mx-auto flex w-full max-w-[794px] flex-col gap-7 rounded-[4px] border border-paper-line bg-paper px-6 py-8 text-paper-ink shadow-[0_1px_2px_rgb(0_0_0/.06),0_12px_32px_-12px_rgb(0_0_0/.18)] sm:px-12 sm:py-12"
+        className="sheet-paper mx-auto flex w-full max-w-[794px] flex-col gap-7 border border-paper-line bg-paper px-6 py-8 text-paper-ink shadow-[0_1px_2px_rgb(0_0_0/.06),0_12px_32px_-12px_rgb(0_0_0/.18)] sm:px-12 sm:py-12"
       >
         <header className="flex flex-col gap-5">
           <div className="flex items-start justify-between gap-4">

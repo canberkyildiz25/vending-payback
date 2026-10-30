@@ -25,7 +25,7 @@ const REPO = "https://github.com/canberkyildiz25/vending-payback";
 
 export function SiteFooter({ t }: { t: Messages }) {
   return (
-    <footer className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-2 border-t border-line pt-5">
+    <footer className="on-cabinet flex flex-wrap items-baseline justify-between gap-x-6 gap-y-2 border-t border-line pt-5">
       <p className="m-0 font-display text-base font-bold [font-stretch:90%]">{t.footer.signature}</p>
       <p className="m-0 flex flex-wrap gap-x-5 gap-y-1 text-[13px] text-muted">
         <a href={REPO} className="whitespace-nowrap text-accent underline-offset-4 hover:underline">

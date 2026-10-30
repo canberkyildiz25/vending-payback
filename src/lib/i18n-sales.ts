@@ -33,7 +33,7 @@ const en = {
       site: {
         name: "Site",
         ask: "Where do your machines stand, and how many are there?",
-        why: "The location shapes everything after it: who buys, when, and whether they carry coins. It also shows you are thinking about their site, not your product.",
+        why: "The location shapes everything after it: who buys, when, and whether they carry cash. It also shows you are thinking about their site, not your product.",
       },
       sales: {
         name: "Sales",
@@ -42,12 +42,12 @@ const en = {
       },
       cash: {
         name: "Cash",
-        ask: "What does handling cash cost you today: collections, counting, coin top-ups?",
+        ask: "What does handling cash cost you today: collections, counting, topping up change?",
         why: "This cost is often invisible until someone asks. Saying it out loud gives the buyer a gain that does not depend on selling more.",
       },
       estimates: {
         name: "Estimates",
-        ask: "How often do people walk away without coins? What would you call a cautious, a likely and a hopeful increase?",
+        ask: "How often do people walk away without cash? What would you call a cautious, a likely and a hopeful increase?",
         why: "Let the buyer name the numbers. They will defend their own estimate to their finance team; they will question yours.",
       },
       costs: {
@@ -79,7 +79,7 @@ const en = {
       },
       cash: {
         q: "“My customers pay cash.”",
-        a: (share: string, net: string) => `Then keep cash: readers add a way to pay, they don't remove coins. On the conservative case, with ${share} paying by card, the net is ${net} a month. A pilot shows your real share.`,
+        a: (share: string, net: string) => `Then keep cash: readers add a way to pay, they don't remove cash. On the conservative case, with ${share} paying by card, the net is ${net} a month. A pilot shows your real share.`,
       },
       later: {
         q: "“Let's look at this next year.”",
@@ -96,7 +96,7 @@ const en = {
     steps: {
       problem: {
         title: "The problem, in the buyer's terms",
-        body: (machines: number, sales: string) => `A gym chain runs ${machines} machines that only take coins, selling ${sales} a month. Members often train without a wallet. Nobody has measured the sales this loses.`,
+        body: (machines: number, sales: string) => `A gym chain runs ${machines} machines that only take cash, selling ${sales} a month. Members often train without a wallet. Nobody has measured the sales this loses.`,
         lesson: "Start from their fleet, not from the reader's features.",
       },
       numbers: {
@@ -169,7 +169,7 @@ const tr: SalesCopy = {
       site: {
         name: "Lokasyon",
         ask: "Makineleriniz nerede duruyor, kaç tane var?",
-        why: "Sonraki her şeyi lokasyon belirler: kim, ne zaman alıyor, üzerinde bozuk para var mı. Ürününüzü değil, onların lokasyonunu düşündüğünüzü de gösterir.",
+        why: "Sonraki her şeyi lokasyon belirler: kim, ne zaman alıyor, üzerinde nakit var mı. Ürününüzü değil, onların lokasyonunu düşündüğünüzü de gösterir.",
       },
       sales: {
         name: "Satış",
@@ -178,12 +178,12 @@ const tr: SalesCopy = {
       },
       cash: {
         name: "Nakit",
-        ask: "Nakit bugün size neye mal oluyor: para toplama, sayma, bozuk para doldurma?",
+        ask: "Nakit bugün size neye mal oluyor: para toplama, sayma, para üstü doldurma?",
         why: "Bu maliyet çoğu zaman biri sorana kadar görünmez. Yüksek sesle söylenince alıcı, daha fazla satışa bağlı olmayan bir kazanç görür.",
       },
       estimates: {
         name: "Tahminler",
-        ask: "İnsanlar bozuk parası olmadığı için ne sıklıkla vazgeçiyor? Temkinli, olası ve iyimser artış size göre ne olur?",
+        ask: "İnsanlar üzerinde nakit olmadığı için ne sıklıkla vazgeçiyor? Temkinli, olası ve iyimser artış size göre ne olur?",
         why: "Rakamları alıcı söylesin. Kendi tahminini finans ekibine karşı savunur; sizinkini sorgular.",
       },
       costs: {
@@ -215,7 +215,7 @@ const tr: SalesCopy = {
       },
       cash: {
         q: "“Müşterilerim nakit öder.”",
-        a: (share, net) => `O zaman nakit de kalsın: okuyucu bir ödeme yolu ekler, bozuk parayı kaldırmaz. Temkinli senaryoda, ${share} kartla ödeme ile net kazanç ayda ${net}. Gerçek payı bir pilot gösterir.`,
+        a: (share, net) => `O zaman nakit de kalsın: okuyucu bir ödeme yolu ekler, nakdi kaldırmaz. Temkinli senaryoda, ${share} kartla ödeme ile net kazanç ayda ${net}. Gerçek payı bir pilot gösterir.`,
       },
       later: {
         q: "“Buna gelecek yıl bakalım.”",
@@ -232,7 +232,7 @@ const tr: SalesCopy = {
     steps: {
       problem: {
         title: "Sorun, alıcının diliyle",
-        body: (machines, sales) => `Bir spor salonu zinciri yalnız bozuk para alan ${machines} makine işletiyor ve ayda ${sales} satıyor. Üyeler çoğu zaman cüzdansız antrenman yapıyor. Bunun ne kadar satış kaybettirdiğini kimse ölçmemiş.`,
+        body: (machines, sales) => `Bir spor salonu zinciri yalnız nakit alan ${machines} makine işletiyor ve ayda ${sales} satıyor. Üyeler çoğu zaman cüzdansız antrenman yapıyor. Bunun ne kadar satış kaybettirdiğini kimse ölçmemiş.`,
         lesson: "Okuyucunun özelliklerinden değil, onların filosundan başlayın.",
       },
       numbers: {
@@ -303,7 +303,7 @@ const nl: SalesCopy = {
       site: {
         name: "Locatie",
         ask: "Waar staan uw automaten en hoeveel zijn het er?",
-        why: "De locatie bepaalt alles wat volgt: wie koopt, wanneer, en of ze muntgeld bij zich hebben. Het laat ook zien dat u aan hun locatie denkt, niet aan uw product.",
+        why: "De locatie bepaalt alles wat volgt: wie koopt, wanneer, en of ze contant geld bij zich hebben. Het laat ook zien dat u aan hun locatie denkt, niet aan uw product.",
       },
       sales: {
         name: "Omzet",
@@ -317,7 +317,7 @@ const nl: SalesCopy = {
       },
       estimates: {
         name: "Schattingen",
-        ask: "Hoe vaak lopen mensen weg omdat ze geen muntgeld hebben? Wat is voor u een voorzichtige, een waarschijnlijke en een hoopvolle groei?",
+        ask: "Hoe vaak lopen mensen weg omdat ze geen contant geld hebben? Wat is voor u een voorzichtige, een waarschijnlijke en een hoopvolle groei?",
         why: "Laat de koper de cijfers noemen. Zijn eigen schatting verdedigt hij bij finance; die van u stelt hij ter discussie.",
       },
       costs: {
@@ -349,7 +349,7 @@ const nl: SalesCopy = {
       },
       cash: {
         q: "“Mijn klanten betalen contant.”",
-        a: (share, net) => `Houd contant dan aan: terminals voegen een betaalwijze toe, ze halen muntgeld niet weg. In het voorzichtige scenario, met ${share} pinbetalingen, is de nettowinst ${net} per maand. Een pilot toont uw echte aandeel.`,
+        a: (share, net) => `Houd contant dan aan: terminals voegen een betaalwijze toe, ze halen contant geld niet weg. In het voorzichtige scenario, met ${share} pinbetalingen, is de nettowinst ${net} per maand. Een pilot toont uw echte aandeel.`,
       },
       later: {
         q: "“Laten we hier volgend jaar naar kijken.”",
@@ -366,7 +366,7 @@ const nl: SalesCopy = {
     steps: {
       problem: {
         title: "Het probleem, in de woorden van de koper",
-        body: (machines, sales) => `Een sportschoolketen heeft ${machines} automaten die alleen muntgeld accepteren en ${sales} per maand verkopen. Leden sporten vaak zonder portemonnee. Niemand heeft gemeten hoeveel omzet dit kost.`,
+        body: (machines, sales) => `Een sportschoolketen heeft ${machines} automaten die alleen contant geld accepteren en ${sales} per maand verkopen. Leden sporten vaak zonder portemonnee. Niemand heeft gemeten hoeveel omzet dit kost.`,
         lesson: "Begin bij hun automatenpark, niet bij de functies van de terminal.",
       },
       numbers: {

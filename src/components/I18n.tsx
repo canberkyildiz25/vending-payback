@@ -30,7 +30,7 @@ export function LangSwitcher() {
           document.cookie = `${LANG_COOKIE}=${e.target.value}; path=/; max-age=31536000; samesite=lax`;
           router.refresh();
         }}
-        className="min-h-9 cursor-pointer rounded-md border border-line bg-panel px-2 py-1.5 text-sm text-ink hover:border-muted"
+        className="min-h-9 cursor-pointer border border-line bg-panel px-2 py-1.5 text-sm text-ink"
         aria-label={MESSAGES[lang].langLabel}
       >
         {LANGS.map((l) => (

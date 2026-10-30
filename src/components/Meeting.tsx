@@ -50,7 +50,7 @@ export function Meeting({ initial }: { initial: CalcState }) {
 
   return (
     <div className="grid items-start gap-6 lg:grid-cols-[minmax(0,1.25fr)_minmax(0,1fr)]">
-      <section className="flex min-w-0 flex-col gap-6 rounded-[10px] border border-line bg-panel p-5 sm:p-7" aria-labelledby="meeting-q">
+      <section className="flex min-w-0 flex-col gap-6 bg-panel p-5 sm:p-7" aria-labelledby="meeting-q">
         <nav aria-label={M.stepsAria}>
           <ol className="m-0 grid list-none grid-cols-6 gap-1 p-0">
             {STEPS.map((id, i) => (
@@ -74,7 +74,7 @@ export function Meeting({ initial }: { initial: CalcState }) {
 
         <div className="flex flex-col gap-2">
           <p className="num m-0 text-xs text-muted">{M.stepLabel(index + 1, STEPS.length)}</p>
-          <h2 id="meeting-q" ref={heading} tabIndex={-1} className="m-0 font-display text-[clamp(24px,3.4vw,34px)] leading-[1.1] font-extrabold text-balance outline-none [font-stretch:82%]">
+          <h2 id="meeting-q" ref={heading} tabIndex={-1} className="sign m-0 text-[clamp(30px,4.4vw,46px)] text-balance outline-none">
             {copy.ask}
           </h2>
           <p className="m-0 max-w-[62ch] text-sm text-muted">
@@ -146,7 +146,7 @@ export function Meeting({ initial }: { initial: CalcState }) {
                 <p className="m-0 text-sm">{M.noCase}</p>
               )}
               <div className="flex flex-wrap items-center gap-x-4 gap-y-2 pt-1">
-                <Link href={`/proposal?${query}`} className="inline-flex min-h-11 items-center rounded-md bg-ink px-4 text-sm font-semibold whitespace-nowrap text-panel no-underline transition-opacity duration-150 hover:opacity-90 active:opacity-80">
+                <Link href={`/proposal?${query}`} className="inline-flex min-h-11 items-center bg-ink px-4 text-sm font-semibold whitespace-nowrap text-panel no-underline transition-opacity duration-150 hover:opacity-90 active:opacity-80">
                   {M.toProposal}
                 </Link>
                 <Link href={`/?${query}`} className="text-sm font-semibold whitespace-nowrap text-accent underline-offset-4 hover:underline">
@@ -162,7 +162,7 @@ export function Meeting({ initial }: { initial: CalcState }) {
             type="button"
             onClick={() => go(index - 1)}
             disabled={index === 0}
-            className="inline-flex min-h-11 cursor-pointer items-center rounded-md border border-line bg-transparent px-4 text-sm font-semibold text-ink hover:border-muted disabled:cursor-default disabled:opacity-40"
+            className="inline-flex min-h-11 cursor-pointer items-center border border-line bg-transparent px-4 text-sm font-semibold text-ink hover:border-muted disabled:cursor-default disabled:opacity-40"
           >
             {M.back}
           </button>
@@ -170,7 +170,7 @@ export function Meeting({ initial }: { initial: CalcState }) {
             <button
               type="button"
               onClick={() => go(index + 1)}
-              className="inline-flex min-h-11 cursor-pointer items-center rounded-md bg-ink px-4 text-sm font-semibold whitespace-nowrap text-panel transition-opacity duration-150 hover:opacity-90 active:opacity-80"
+              className="inline-flex min-h-11 cursor-pointer items-center bg-ink px-4 text-sm font-semibold whitespace-nowrap text-panel transition-opacity duration-150 hover:opacity-90 active:opacity-80"
             >
               {index === STEPS.length - 2 ? M.toClose : M.next}
             </button>
@@ -178,7 +178,7 @@ export function Meeting({ initial }: { initial: CalcState }) {
         </div>
       </section>
 
-      <aside className="display flex min-w-0 flex-col gap-4 rounded-[12px] bg-display p-5 text-display-ink shadow-[inset_0_0_0_1px_rgb(255_255_255/.06),inset_0_2px_14px_rgb(0_0_0/.45)] sm:p-6 lg:sticky lg:top-4" aria-label={M.live}>
+      <aside className="display flex min-w-0 flex-col gap-4 bg-display p-5 text-display-ink sm:p-6 lg:sticky lg:top-4" aria-label={M.live}>
         <div className="label-caps text-display-dim">{M.live}</div>
         <div className="grid grid-cols-3 gap-1.5" role="group" aria-label={t.display.choose}>
           {SCENARIO_IDS.map((id) => {
@@ -189,7 +189,7 @@ export function Meeting({ initial }: { initial: CalcState }) {
                 type="button"
                 aria-pressed={on}
                 onClick={() => onSelect(id)}
-                className={`flex min-h-11 min-w-0 cursor-pointer flex-col items-start gap-1 rounded-md border-t-[3px] bg-white/[.04] px-2 py-1.5 text-left transition-colors duration-150 hover:bg-white/[.08] ${on ? "border-display-coin" : "border-display-grid"}`}
+                className="key-metal flex min-h-11 min-w-0 flex-col items-start justify-center px-2 py-1.5 text-left"
               >
                 <span className={`label-caps max-w-full truncate text-[10px] tracking-[.04em] [font-stretch:68%] ${on ? "text-display-ink" : "text-display-dim"}`}>{t.scenario[id]}</span>
               </button>
@@ -199,8 +199,8 @@ export function Meeting({ initial }: { initial: CalcState }) {
         <div aria-live="polite">
           <div className="label-caps text-display-dim">{t.display.paybackPeriod}</div>
           <div className="flex flex-wrap items-baseline gap-2">
-            <span className="num text-[44px] leading-none font-semibold text-display-coin">{pb.value}</span>
-            {pb.unit && <span className="font-display text-lg font-bold [font-stretch:85%]">{pb.unit}</span>}
+            <span className="num lcd text-[64px] leading-none font-semibold tracking-[-.03em]">{pb.value}</span>
+            {pb.unit && <span className="sign text-[22px]">{pb.unit}</span>}
           </div>
           <p className="num m-0 mt-2 text-sm">
             {t.display.netMonth}: {fmt.money(shown.netMonthly)}

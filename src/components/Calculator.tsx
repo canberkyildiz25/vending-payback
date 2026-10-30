@@ -5,21 +5,17 @@ import { PilotPanel } from "./PilotPanel";
 import { ResultDisplay } from "./ResultDisplay";
 import { SavedCases } from "./SavedCases";
 import { useCalcState } from "./useCalcState";
-import { Worksheet } from "./Worksheet";
+import { PresetShelf, Worksheet } from "./Worksheet";
 
 export function Calculator({ initial }: { initial: CalcState }) {
   const { state, setState, results, query, onPreset, onCurrency, onFleet, onScenario, onSelect } = useCalcState(initial);
 
   return (
     <>
+      <PresetShelf state={state} onPreset={onPreset} onCurrency={onCurrency} />
+
       <div className="grid items-start gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.05fr)]">
-        <Worksheet
-          state={state}
-          onPreset={onPreset}
-          onCurrency={onCurrency}
-          onFleet={onFleet}
-          onScenario={onScenario}
-        />
+        <Worksheet state={state} onFleet={onFleet} onScenario={onScenario} />
         <ResultDisplay
           state={state}
           results={results}

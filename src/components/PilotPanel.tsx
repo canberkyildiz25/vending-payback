@@ -60,9 +60,9 @@ export function PilotPanel({ state, onApply, onClear }: Props) {
     !!figures && inUse && state.pilot?.upliftPct === figures.upliftPct && state.pilot?.cardSharePct === figures.cardSharePct;
 
   return (
-    <section className="flex min-w-0 flex-col gap-4 rounded-[10px] border border-line bg-panel p-5 sm:p-6" aria-labelledby="pilot-head">
+    <section className="flex min-w-0 flex-col gap-4 bg-panel p-5 sm:p-6" aria-labelledby="pilot-head">
       <div className="flex flex-col gap-1.5">
-        <h2 id="pilot-head" className="m-0 border-b border-line pb-2 font-display text-[17px] leading-tight font-bold [font-stretch:88%]">
+        <h2 id="pilot-head" className="band m-0">
           {P.title}
         </h2>
         <p className="m-0 text-[13px] text-muted">
@@ -71,7 +71,7 @@ export function PilotPanel({ state, onApply, onClear }: Props) {
       </div>
 
       <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
-        <label className="inline-flex min-h-11 cursor-pointer items-center rounded-md border border-line bg-bg px-4 text-sm font-semibold whitespace-nowrap text-ink transition-colors duration-150 hover:border-muted has-focus-visible:outline-2 has-focus-visible:outline-offset-2 has-focus-visible:outline-accent">
+        <label className="inline-flex min-h-11 cursor-pointer items-center border border-ink bg-bg px-4 text-sm font-semibold whitespace-nowrap text-ink transition-colors duration-150 hover:border-muted has-focus-visible:outline-2 has-focus-visible:outline-offset-2 has-focus-visible:outline-accent">
           <input
             type="file"
             accept=".csv,text/csv,text/plain"
@@ -115,7 +115,7 @@ export function PilotPanel({ state, onApply, onClear }: Props) {
               min={analysis.firstDate}
               max={analysis.lastDate}
               onChange={(e) => e.target.value && setInstall(e.target.value)}
-              className="num rounded-md border border-line bg-bg px-2.5 py-1.5 text-sm text-ink hover:border-muted"
+              className="num border border-ink bg-bg px-2.5 py-1.5 text-sm text-ink hover:border-muted"
             />
             <span className="text-xs text-muted">{P.installHint}</span>
           </label>
@@ -149,7 +149,7 @@ export function PilotPanel({ state, onApply, onClear }: Props) {
               type="button"
               disabled={!usable || sameAsApplied}
               onClick={() => figures && onApply(figures)}
-              className="inline-flex min-h-11 cursor-pointer items-center rounded-md bg-ink px-4 text-sm font-semibold whitespace-nowrap text-panel transition-opacity duration-150 hover:opacity-90 active:opacity-80 disabled:cursor-default disabled:opacity-40"
+              className="inline-flex min-h-11 cursor-pointer items-center bg-ink px-4 text-sm font-semibold whitespace-nowrap text-panel transition-opacity duration-150 hover:opacity-90 active:opacity-80 disabled:cursor-default disabled:opacity-40"
             >
               {sameAsApplied ? P.inUse : P.use}
             </button>
@@ -158,7 +158,7 @@ export function PilotPanel({ state, onApply, onClear }: Props) {
       )}
 
       {inUse && state.pilot && (
-        <div className="flex flex-wrap items-center justify-between gap-3 rounded-md bg-bg px-3 py-2.5 text-[13px]">
+        <div className="flex flex-wrap items-center justify-between gap-3 bg-bg px-3 py-2.5 text-[13px]">
           <span>
             <span className="mr-1.5 inline-block size-2 rounded-full bg-gain align-middle" aria-hidden="true" />
             {P.banner(state.pilot.machines)}
@@ -166,7 +166,7 @@ export function PilotPanel({ state, onApply, onClear }: Props) {
           <button
             type="button"
             onClick={onClear}
-            className="cursor-pointer rounded-md border border-line bg-transparent px-2.5 py-1.5 text-sm font-semibold whitespace-nowrap text-accent hover:border-accent"
+            className="cursor-pointer border border-line bg-transparent px-2.5 py-1.5 text-sm font-semibold whitespace-nowrap text-accent hover:border-accent"
           >
             {P.stop}
           </button>
