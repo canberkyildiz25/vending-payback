@@ -54,7 +54,7 @@ export function ResultDisplay({ state, results, onSelect, proposalHref }: Props)
             {d.paybackPeriod} · {label}
           </div>
           <div className="flex flex-wrap items-baseline gap-2.5">
-            <span className="num lcd text-[clamp(64px,10vw,104px)] leading-none font-semibold tracking-[-.03em]">{pb.value}</span>
+            <span key={pb.value} className="num lcd lcd-tick text-[clamp(64px,10vw,104px)] leading-none font-semibold tracking-[-.03em]">{pb.value}</span>
             {pb.unit && <span className="sign text-[28px]">{pb.unit}</span>}
           </div>
           <p className="m-0 mt-2 text-sm text-display-dim">{d.verdict[verdictFor(r.paybackMonths)]}</p>
@@ -94,7 +94,8 @@ export function ResultDisplay({ state, results, onSelect, proposalHref }: Props)
       </section>
 
       <div className="dispense relative z-10 -mt-1" aria-hidden="true" />
-      <div className="receipt mx-3 -mt-1.5 pt-6 sm:mx-8">
+      <div className="receipt-feed mx-3 -mt-1.5 sm:mx-8">
+      <div key={state.selected} className="receipt pt-6">
         <table className="w-full border-collapse" aria-label={d.breakdown(label)}>
           <tbody>
             {rows.map(([name, value]) => (
@@ -109,6 +110,7 @@ export function ResultDisplay({ state, results, onSelect, proposalHref }: Props)
             </tr>
           </tbody>
         </table>
+      </div>
       </div>
 
       <div className="on-cabinet mt-5 flex flex-wrap items-center gap-x-3 gap-y-3">

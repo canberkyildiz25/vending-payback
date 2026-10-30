@@ -31,7 +31,7 @@ export default async function Home({ searchParams }: { searchParams: Promise<Sea
             </div>
           </div>
           <figure className="shelf m-0 flex min-w-0 flex-col">
-            <Image src={hero} alt={t.header.heroAlt} priority placeholder="blur" sizes="(min-width: 1024px) 520px, 100vw" className="aspect-[21/9] h-auto w-full object-cover" />
+            <Image src={hero} alt={t.header.heroAlt} priority placeholder="blur" sizes="(min-width: 1024px) 520px, 100vw" className="signal-in aspect-[21/9] h-auto w-full object-cover" />
             <figcaption className="rail">{t.header.heroCaption}</figcaption>
           </figure>
         </div>

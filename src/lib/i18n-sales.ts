@@ -2,6 +2,7 @@
 
 const en = {
   nav: { calculator: "Calculator", meeting: "Meeting mode", caseStudy: "60-second case", aria: "Main" },
+  keypad: { aria: "Slot keypad", clear: "Clear", invalid: (code: string) => `No slot ${code}` },
   cta: { caseStudy: "See the 60-second case", meeting: "Run it in a client meeting" },
   insight: {
     breakEvenTitle: "What has to be true",
@@ -138,6 +139,7 @@ export type SalesCopy = typeof en;
 
 const tr: SalesCopy = {
   nav: { calculator: "Hesaplayıcı", meeting: "Görüşme modu", caseStudy: "60 saniyelik vaka", aria: "Ana menü" },
+  keypad: { aria: "Raf tuş takımı", clear: "Temizle", invalid: (code) => `${code} numaralı raf yok` },
   cta: { caseStudy: "60 saniyelik vakayı gör", meeting: "Müşteri görüşmesinde kullan" },
   insight: {
     breakEvenTitle: "Hangi koşul yeterli",
@@ -272,6 +274,7 @@ const tr: SalesCopy = {
 
 const nl: SalesCopy = {
   nav: { calculator: "Calculator", meeting: "Gespreksmodus", caseStudy: "Case in 60 seconden", aria: "Hoofdmenu" },
+  keypad: { aria: "Toetsenbord voor vakken", clear: "Wissen", invalid: (code) => `Vak ${code} bestaat niet` },
   cta: { caseStudy: "Bekijk de case in 60 seconden", meeting: "Gebruik in een klantgesprek" },
   insight: {
     breakEvenTitle: "Wat er waar moet zijn",
