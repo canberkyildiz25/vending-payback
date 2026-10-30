@@ -37,8 +37,8 @@
   --paper-ink: #1f1c14;
   --paper-muted: #5c5443;
   --paper-line: #d9d5c4;
-  --paper-coin: #b3261a;
-  --paper-accent: #0f6459;
+  --paper-coin: #0f6459;
+  --paper-accent: #93876e;
   --paper-gain: #0f6459;
 
   --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
@@ -233,7 +233,7 @@ body {
 /* ---- chart series, defined per surface ---- */
 .display { --series-conservative: var(--display-dim); --series-realistic: var(--display-coin); --series-optimistic: var(--display-cobalt);
   --chart-grid: var(--display-grid); --chart-dim: var(--display-dim); --chart-ink: var(--display-ink); --chart-bg: var(--display-bg); }
-.sheet-paper { --series-conservative: #93876e; --series-realistic: var(--paper-coin); --series-optimistic: var(--paper-accent);
+.sheet-paper { --series-conservative: #93876e; --series-realistic: var(--paper-coin); --series-optimistic: #b3261a;
   --chart-grid: var(--paper-line); --chart-dim: var(--paper-muted); --chart-ink: var(--paper-ink); --chart-bg: var(--paper); }
 
 /* ---- motion: the machine powering up. Own code; transform, opacity and clip-path only. ---- */
