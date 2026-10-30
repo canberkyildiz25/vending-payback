@@ -1,5 +1,6 @@
 import type { Format } from "./format";
 import type { Messages } from "./i18n";
+import { breakEvenUplift, costOfDelay } from "./insights";
 import { computePayback } from "./payback";
 import { SCENARIO_IDS } from "./scenarios";
 import { isMeasured, type CalcState } from "./state";
@@ -20,7 +21,12 @@ export function emailSummary(s: CalcState, t: Messages, fmt: Format): string {
       "",
     );
   }
+  const be = breakEvenUplift(s.fleet, s.scenarios.realistic.cardSharePct);
+  const delay = costOfDelay(s.fleet, s.scenarios.realistic, 6);
   lines.push(
+    ...(be.kind === "needs" ? [t.sales.email.breakEven(fmt.pct(be.upliftPct))] : be.kind === "no-growth-needed" ? [t.sales.email.noGrowth] : []),
+    ...(delay > 0 ? [t.sales.email.delay(fmt.money(delay))] : []),
+    "",
     e.upfront(fmt.money(base.upfront), s.fleet.machines),
     e.shared(fmt.pct(s.fleet.marginPct), fmt.pct(s.fleet.feePct), fmt.money(s.fleet.monthlyServiceFee, 2), fmt.money(s.fleet.handlingSavedPerMachine)),
     e.marginOnly,

@@ -1,0 +1,27 @@
+import type { Metadata } from "next";
+import { Meeting } from "@/components/Meeting";
+import { SiteFooter } from "@/components/Method";
+import { TopBar } from "@/components/TopBar";
+import { MESSAGES } from "@/lib/i18n";
+import { getLang } from "@/lib/lang-server";
+import { fromSearchParams, readSearch, type Search } from "@/lib/state";
+
+export async function generateMetadata(): Promise<Metadata> {
+  return { title: MESSAGES[await getLang()].sales.meeting.metaTitle };
+}
+
+export default async function MeetingPage({ searchParams }: { searchParams: Promise<Search> }) {
+  const [initial, lang] = await Promise.all([searchParams.then((sp) => fromSearchParams(readSearch(sp))), getLang()]);
+  const t = MESSAGES[lang];
+  return (
+    <main className="mx-auto flex max-w-[1120px] flex-col gap-6 px-4 pt-5 pb-10">
+      <TopBar t={t} page="meeting" />
+      <header className="flex flex-col gap-2">
+        <h1 className="m-0 font-display text-[clamp(30px,4.6vw,46px)] leading-[1.04] font-extrabold tracking-[-.01em] [font-stretch:80%]">{t.sales.meeting.title}</h1>
+        <p className="m-0 max-w-[62ch] text-muted">{t.sales.meeting.intro}</p>
+      </header>
+      <Meeting initial={initial} />
+      <SiteFooter t={t} />
+    </main>
+  );
+}

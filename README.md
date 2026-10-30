@@ -2,7 +2,7 @@
 
 A calculator a vending sales team can open in front of an operator and use to answer the one question that decides the deal: **when do the card readers pay for themselves?**
 
-**Live demo:** [vending-payback.vercel.app](https://vending-payback.vercel.app)
+**Live demo:** [vending-payback.vercel.app](https://vending-payback.vercel.app) · short on time? Start with the [60-second case](https://vending-payback.vercel.app/case).
 
 ![The calculator: worksheet on the left, the result display with three scenarios on the right](docs/screenshot.png)
 
@@ -21,6 +21,10 @@ This tool is built around that conversation:
 
 | | |
 |---|---|
+| Break-even | The smallest sales increase that still pays the readers back within 3 years. Answers "I don't believe that uplift" without arguing about it |
+| Cost of waiting | The net gain given up by deciding 3, 6 or 12 months later |
+| Meeting mode | The sales conversation as six guided steps: the question to ask, why it matters, and the fields it fills in. Ends with example replies to common objections, built on the client's own figures. If the case does not hold, it says so |
+| 60-second case | One invented example conversation, from problem to proposal, for anyone who will not fill in a form |
 | Scenario comparison | Conservative / realistic / optimistic, each with its own sales increase and card share; one shared 36-month chart |
 | Location presets | Factory, gym chain, campus, hospital, office; fills the worksheet with labelled example values |
 | Client proposal | Client name, optional logo (stays in the browser), all three cases, assumptions and method; prints to A4 or saves as PDF |
@@ -58,6 +62,13 @@ net gain after 3 years = net gain per month × 36 − upfront investment
 ```
 
 Reference case, covered by a unit test: 50 machines, €40 a day, 30 days, 40 % margin, 15 % uplift, 50 % card share, €10 cash handling saved, €300 reader, €8 service fee, 2.5 % processing fee → **€2,837.50 a month, payback in 5.29 months, €87,150 after three years.**
+
+Break-even and waiting:
+
+```
+break-even increase = (upfront ÷ 36 − net gain at no increase) ÷ (monthly sales today × (margin − card share × fee))
+cost of waiting     = net gain per month × months waited
+```
 
 ## Built with
 

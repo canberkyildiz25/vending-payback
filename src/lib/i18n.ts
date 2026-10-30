@@ -1,6 +1,7 @@
 // Interface copy in English, Turkish and Dutch. English is the source; the
 // other two must provide every key (the Messages type enforces it).
 import type { PresetId } from "./presets";
+import { SALES } from "./i18n-sales";
 import type { ScenarioId } from "./scenarios";
 
 export const LANGS = ["en", "tr", "nl"] as const;
@@ -30,6 +31,7 @@ export function pickLang(opts: { cookie?: string | null; country?: string | null
 type PresetCopy = { label: string; phrase: string; hint: string };
 
 const en = {
+  sales: SALES.en,
   langLabel: "Language",
   meta: {
     title: "Cashless Vending Payback",
@@ -265,6 +267,7 @@ const en = {
 export type Messages = typeof en;
 
 const tr: Messages = {
+  sales: SALES.tr,
   langLabel: "Dil",
   meta: {
     title: "Kartlı Otomat Geri Dönüş Hesabı",
@@ -498,6 +501,7 @@ const tr: Messages = {
 };
 
 const nl: Messages = {
+  sales: SALES.nl,
   langLabel: "Taal",
   meta: {
     title: "Terugverdientijd Pinbetalen Automaten",

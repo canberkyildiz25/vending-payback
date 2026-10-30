@@ -29,7 +29,7 @@ function Tag({ children }: { children: ReactNode }) {
   return <span className="ml-1.5 text-[10.5px] font-semibold tracking-[.06em] whitespace-nowrap text-coin uppercase">{children}</span>;
 }
 
-function Legend({ children }: { children: ReactNode }) {
+export function Legend({ children }: { children: ReactNode }) {
   return (
     <legend className="mb-1 w-full border-b border-line pb-2 font-display text-[17px] leading-tight font-bold [font-stretch:88%]">
       {children}
@@ -37,7 +37,7 @@ function Legend({ children }: { children: ReactNode }) {
   );
 }
 
-function Row({ id, label, hint, children }: { id: string; label: ReactNode; hint?: string; children: ReactNode }) {
+export function Row({ id, label, hint, children }: { id: string; label: ReactNode; hint?: string; children: ReactNode }) {
   return (
     <div className="grid grid-cols-[minmax(0,1fr)_minmax(0,128px)] items-center gap-3">
       <label htmlFor={id} className="text-sm leading-snug">
@@ -49,38 +49,107 @@ function Row({ id, label, hint, children }: { id: string; label: ReactNode; hint
   );
 }
 
+export function PresetTiles({ state, onPreset }: Pick<Props, "state" | "onPreset">) {
+  const { t } = useI18n(state.currency);
+  return (
+    <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
+      {PRESET_IDS.map((id) => (
+        <label
+          key={id}
+          className="group relative flex min-w-0 cursor-pointer flex-col overflow-hidden rounded-md border border-line bg-bg transition-colors duration-150 hover:border-muted has-checked:border-ink has-checked:ring-1 has-checked:ring-ink has-focus-visible:outline-2 has-focus-visible:outline-offset-2 has-focus-visible:outline-accent"
+        >
+          <input type="radio" name="preset" value={id} checked={state.preset === id} onChange={() => onPreset(id)} className="sr-only" />
+          <Image
+            src={PHOTO[id]}
+            alt=""
+            sizes="(min-width: 640px) 160px, 45vw"
+            placeholder="blur"
+            className="aspect-[16/9] h-auto w-full object-cover grayscale transition-[filter] duration-200 group-hover:grayscale-0 group-has-checked:grayscale-0"
+          />
+          <span className="flex min-h-10 items-center px-2.5 py-1.5 text-[13px] leading-tight font-semibold group-has-checked:bg-ink group-has-checked:text-panel">
+            {t.presets[id].label}
+          </span>
+        </label>
+      ))}
+    </div>
+  );
+}
+
+export function EstimatesGrid({ state, onScenario }: Pick<Props, "state" | "onScenario">) {
+  const { t } = useI18n(state.currency);
+  const measured = (k: "upliftPct" | "cardSharePct") => isMeasured(state, k);
+  return (
+    <>
+      <div role="group" aria-labelledby="sc-head" className="grid grid-cols-3 gap-x-2 gap-y-3 sm:grid-cols-[minmax(0,1fr)_repeat(3,88px)]">
+        <span id="sc-head" className="sr-only">
+          {t.sheet.scenarioEstimates}
+        </span>
+        <span className="hidden sm:block" aria-hidden="true" />
+        {SCENARIO_IDS.map((id) => (
+          <span key={id} className="label-caps text-right text-[10.5px] tracking-[.02em] text-muted [font-stretch:72%]" aria-hidden="true">
+            {t.scenario[id]}
+          </span>
+        ))}
+
+        <p id="uplift-label" className="col-span-3 m-0 text-sm leading-snug sm:col-span-1">
+          {t.sheet.salesIncrease} <Tag>{t.sheet.yourEstimate}</Tag>
+          <small className="block text-xs text-muted">{t.sheet.salesIncreaseHint}</small>
+        </p>
+        {SCENARIO_IDS.map((id) => (
+          <NumberInput
+            key={id}
+            id={`uplift-${id}`}
+            max={200}
+            unit="%"
+            value={state.scenarios[id].upliftPct}
+            onChange={(v) => onScenario(id, "upliftPct", v)}
+            aria-label={`${t.sheet.salesIncrease}, ${t.scenario[id]}${id === "realistic" && measured("upliftPct") ? t.sheet.measuredSuffix : ""}`}
+            aria-describedby="uplift-label"
+            measured={id === "realistic" && measured("upliftPct")}
+          />
+        ))}
+
+        <p id="share-label" className="col-span-3 m-0 text-sm leading-snug sm:col-span-1">
+          {t.sheet.cardShare} <Tag>{t.sheet.yourEstimate}</Tag>
+        </p>
+        {SCENARIO_IDS.map((id) => (
+          <NumberInput
+            key={id}
+            id={`share-${id}`}
+            max={100}
+            unit="%"
+            value={state.scenarios[id].cardSharePct}
+            onChange={(v) => onScenario(id, "cardSharePct", v)}
+            aria-label={`${t.sheet.cardShare}, ${t.scenario[id]}${id === "realistic" && measured("cardSharePct") ? t.sheet.measuredSuffix : ""}`}
+            aria-describedby="share-label"
+            measured={id === "realistic" && measured("cardSharePct")}
+          />
+        ))}
+      </div>
+      {(measured("upliftPct") || measured("cardSharePct")) && (
+        <p className="m-0 flex items-start gap-2 text-[12.5px] text-muted">
+          <span className="mt-1.5 inline-block size-2 shrink-0 rounded-full bg-gain" aria-hidden="true" />
+          <span>
+            <strong className="font-semibold text-ink">{t.sheet.pilotFieldsStrong}</strong> {t.sheet.pilotFieldsRest}
+          </span>
+        </p>
+      )}
+    </>
+  );
+}
+
 export function Worksheet({ state, onPreset, onCurrency, onFleet, onScenario }: Props) {
   const { fleet } = state;
   const { t, fmt } = useI18n(state.currency);
   const sym = fmt.symbol;
   const f = (k: keyof FleetInputs) => ({ value: fleet[k], onChange: (v: number) => onFleet(k, v) });
-  const measured = (k: "upliftPct" | "cardSharePct") => isMeasured(state, k);
   const p = t.presets[state.preset];
 
   return (
     <form className="flex min-w-0 flex-col gap-7 rounded-[10px] border border-line bg-panel p-5 sm:p-6" noValidate onSubmit={(e) => e.preventDefault()} aria-label={t.sheet.aria}>
       <fieldset className="m-0 flex min-w-0 flex-col gap-3 border-0 p-0">
         <Legend>{t.sheet.startFrom}</Legend>
-        <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
-          {PRESET_IDS.map((id) => (
-            <label
-              key={id}
-              className="group relative flex min-w-0 cursor-pointer flex-col overflow-hidden rounded-md border border-line bg-bg transition-colors duration-150 hover:border-muted has-checked:border-ink has-checked:ring-1 has-checked:ring-ink has-focus-visible:outline-2 has-focus-visible:outline-offset-2 has-focus-visible:outline-accent"
-            >
-              <input type="radio" name="preset" value={id} checked={state.preset === id} onChange={() => onPreset(id)} className="sr-only" />
-              <Image
-                src={PHOTO[id]}
-                alt=""
-                sizes="(min-width: 640px) 160px, 45vw"
-                placeholder="blur"
-                className="aspect-[16/9] h-auto w-full object-cover grayscale transition-[filter] duration-200 group-hover:grayscale-0 group-has-checked:grayscale-0"
-              />
-              <span className="flex min-h-10 items-center px-2.5 py-1.5 text-[13px] leading-tight font-semibold group-has-checked:bg-ink group-has-checked:text-panel">
-                {t.presets[id].label}
-              </span>
-            </label>
-          ))}
-        </div>
+        <PresetTiles state={state} onPreset={onPreset} />
         <div className="flex flex-wrap items-end justify-between gap-3">
           <p className="m-0 max-w-[46ch] text-[13px] text-muted" aria-live="polite">
             <strong className="font-semibold text-ink">{t.sheet.exampleFor(p.phrase)}</strong> {t.sheet.replace} {p.hint}
@@ -122,60 +191,7 @@ export function Worksheet({ state, onPreset, onCurrency, onFleet, onScenario }: 
       <fieldset className="m-0 flex min-w-0 flex-col gap-3 border-0 p-0">
         <Legend>{t.sheet.withCards}</Legend>
         <p className="m-0 text-[13px] text-muted">{t.sheet.estimatesIntro}</p>
-        <div role="group" aria-labelledby="sc-head" className="grid grid-cols-3 gap-x-2 gap-y-3 sm:grid-cols-[minmax(0,1fr)_repeat(3,88px)]">
-          <span id="sc-head" className="sr-only">
-            {t.sheet.scenarioEstimates}
-          </span>
-          <span className="hidden sm:block" aria-hidden="true" />
-          {SCENARIO_IDS.map((id) => (
-            <span key={id} className="label-caps truncate text-right text-[11px] text-muted" aria-hidden="true">
-              {t.scenario[id]}
-            </span>
-          ))}
-
-          <p id="uplift-label" className="col-span-3 m-0 text-sm leading-snug sm:col-span-1">
-            {t.sheet.salesIncrease} <Tag>{t.sheet.yourEstimate}</Tag>
-            <small className="block text-xs text-muted">{t.sheet.salesIncreaseHint}</small>
-          </p>
-          {SCENARIO_IDS.map((id) => (
-            <NumberInput
-              key={id}
-              id={`uplift-${id}`}
-              max={200}
-              unit="%"
-              value={state.scenarios[id].upliftPct}
-              onChange={(v) => onScenario(id, "upliftPct", v)}
-              aria-label={`${t.sheet.salesIncrease}, ${t.scenario[id]}${id === "realistic" && measured("upliftPct") ? t.sheet.measuredSuffix : ""}`}
-              aria-describedby="uplift-label"
-              measured={id === "realistic" && measured("upliftPct")}
-            />
-          ))}
-
-          <p id="share-label" className="col-span-3 m-0 text-sm leading-snug sm:col-span-1">
-            {t.sheet.cardShare} <Tag>{t.sheet.yourEstimate}</Tag>
-          </p>
-          {SCENARIO_IDS.map((id) => (
-            <NumberInput
-              key={id}
-              id={`share-${id}`}
-              max={100}
-              unit="%"
-              value={state.scenarios[id].cardSharePct}
-              onChange={(v) => onScenario(id, "cardSharePct", v)}
-              aria-label={`${t.sheet.cardShare}, ${t.scenario[id]}${id === "realistic" && measured("cardSharePct") ? t.sheet.measuredSuffix : ""}`}
-              aria-describedby="share-label"
-              measured={id === "realistic" && measured("cardSharePct")}
-            />
-          ))}
-        </div>
-        {(measured("upliftPct") || measured("cardSharePct")) && (
-          <p className="m-0 flex items-start gap-2 text-[12.5px] text-muted">
-            <span className="mt-1.5 inline-block size-2 shrink-0 rounded-full bg-gain" aria-hidden="true" />
-            <span>
-              <strong className="font-semibold text-ink">{t.sheet.pilotFieldsStrong}</strong> {t.sheet.pilotFieldsRest}
-            </span>
-          </p>
-        )}
+        <EstimatesGrid state={state} onScenario={onScenario} />
         <Row id="handling" label={t.sheet.handling} hint={t.sheet.handlingHint}>
           <NumberInput id="handling" prefix={sym} {...f("handlingSavedPerMachine")} />
         </Row>

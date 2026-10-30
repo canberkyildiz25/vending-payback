@@ -1,8 +1,9 @@
 import Image from "next/image";
+import Link from "next/link";
 import hero from "@/assets/hero.webp";
 import { Calculator } from "@/components/Calculator";
-import { LangSwitcher } from "@/components/I18n";
 import { MethodList, SiteFooter } from "@/components/Method";
+import { TopBar } from "@/components/TopBar";
 import { MESSAGES } from "@/lib/i18n";
 import { getLang } from "@/lib/lang-server";
 import { fromSearchParams, readSearch, type Search } from "@/lib/state";
@@ -13,12 +14,7 @@ export default async function Home({ searchParams }: { searchParams: Promise<Sea
 
   return (
     <main className="mx-auto flex max-w-[1120px] flex-col gap-8 px-4 pt-5 pb-10">
-      <div className="flex items-center justify-between gap-4">
-        <span className="sticker" aria-hidden="true">
-          {t.header.sticker}
-        </span>
-        <LangSwitcher />
-      </div>
+      <TopBar t={t} page="calculator" />
 
       <header className="grid items-center gap-6 lg:grid-cols-[minmax(0,1.3fr)_minmax(0,1fr)]">
         <div className="flex min-w-0 flex-col gap-3">
@@ -26,6 +22,14 @@ export default async function Home({ searchParams }: { searchParams: Promise<Sea
             {t.header.title}
           </h1>
           <p className="m-0 max-w-[60ch] text-[15.5px] text-muted">{t.header.lede}</p>
+          <div className="flex flex-wrap items-center gap-x-4 gap-y-2 pt-1">
+            <Link href="/case" className="inline-flex min-h-11 items-center rounded-md bg-ink px-4 text-sm font-semibold whitespace-nowrap text-panel no-underline transition-opacity duration-150 hover:opacity-90 active:opacity-80">
+              {t.sales.cta.caseStudy}
+            </Link>
+            <Link href="/meeting" className="inline-flex min-h-11 items-center rounded-md border border-line px-4 text-sm font-semibold whitespace-nowrap text-ink no-underline hover:border-muted">
+              {t.sales.cta.meeting}
+            </Link>
+          </div>
         </div>
         <figure className="m-0 flex min-w-0 flex-col gap-2">
           <Image

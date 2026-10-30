@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useEffect, useMemo, useState, useSyncExternalStore, type ReactNode } from "react";
 import { createFormat } from "@/lib/format";
 import { LANGS, LANG_NAME, MESSAGES, type Lang } from "@/lib/i18n";
+import { breakEvenUplift, costOfDelay } from "@/lib/insights";
 import { computePayback, type FleetInputs, type PaybackResult } from "@/lib/payback";
 import { SCENARIO_IDS, type ScenarioId } from "@/lib/scenarios";
 import { isMeasured, presetFleet, toSearchParams, type CalcState } from "@/lib/state";
@@ -94,6 +95,8 @@ export function Proposal({ initial, initialClient, initialBy, initialDocLang }: 
   const example = presetFleet(state.preset, state.currency);
   const isExample = (k: keyof FleetInputs) => state.fleet[k] === example[k];
   const who = client.trim() || P.yourFleet;
+  const be = breakEvenUplift(state.fleet, state.scenarios.realistic.cardSharePct);
+  const delay = costOfDelay(state.fleet, state.scenarios.realistic, 6);
   const anyMeasured = isMeasured(state, "upliftPct") || isMeasured(state, "cardSharePct");
 
   const onLogo = (file: File | undefined) => {
@@ -286,6 +289,16 @@ export function Proposal({ initial, initialClient, initialBy, initialDocLang }: 
             <span className="num text-paper-ink">{fmt.money(base.upfront)}</span>
             {P.upfrontFor(f.machines)}
           </p>
+        </section>
+
+        <section className="print-avoid-break flex flex-col gap-1.5" aria-labelledby="p-true">
+          <h3 id="p-true" className="m-0 font-display text-lg font-bold [font-stretch:90%]">
+            {t.sales.proposal.title}
+          </h3>
+          <p className="m-0 text-sm">
+            {be.kind === "needs" ? t.sales.email.breakEven(fmt.pct(be.upliftPct)) : be.kind === "no-growth-needed" ? t.sales.email.noGrowth : t.sales.insight.impossible}
+          </p>
+          {delay > 0 && <p className="m-0 text-sm">{t.sales.email.delay(fmt.money(delay))}</p>}
         </section>
 
         <section className="print-avoid-break flex flex-col gap-2" aria-labelledby="p-chart">

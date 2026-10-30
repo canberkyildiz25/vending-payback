@@ -7,6 +7,7 @@ import { SCENARIO_IDS, type ScenarioId } from "@/lib/scenarios";
 import type { CalcState } from "@/lib/state";
 import { CopySummary } from "./CopySummary";
 import { useI18n } from "./I18n";
+import { Insights } from "./Insights";
 import { PaybackChart } from "./PaybackChart";
 
 type Props = {
@@ -97,6 +98,8 @@ export function ResultDisplay({ state, results, onSelect, proposalHref }: Props)
         <Kpi value={fmt.money(r.net3Years)} label={d.net3y} className={tone(r.net3Years)} />
       </div>
 
+      <Insights state={state} t={t} fmt={fmt} />
+
       <div className="min-w-0">
         <div className="label-caps mb-1.5 text-display-dim">{d.chartTitle}</div>
         <PaybackChart results={results} selected={state.selected} t={t} fmt={fmt} />
@@ -120,6 +123,9 @@ export function ResultDisplay({ state, results, onSelect, proposalHref }: Props)
           {d.toProposal}
         </Link>
         <CopySummary state={state} />
+        <Link href={proposalHref.replace("/proposal", "/meeting")} className="basis-full text-sm font-semibold text-display-coin underline-offset-4 hover:underline">
+          {t.sales.cta.meeting}
+        </Link>
       </div>
     </section>
   );
