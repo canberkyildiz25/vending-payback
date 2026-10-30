@@ -28,6 +28,8 @@ This tool is built around that conversation:
 | Pilot data | Upload a CSV (date, machine, sales, payment type) from machines that already have readers. The card share and the sales increase are measured, the realistic case uses them, and they are marked "measured" in the proposal. The file is read in the browser and never uploaded. An example file with invented data is included |
 | Saved client cases | Save, list, open and delete named cases in the browser (localStorage), with Undo on delete |
 | Email summary | Copies a plain-text business case for a client email |
+| Languages | English, Turkish and Dutch. The language is picked from the visitor's country (Vercel's IP country header), then the browser, and can be changed by hand. A proposal can be printed in a different language from the interface |
+| Currencies | EUR, USD, GBP and TRY, formatted the local way. Example values convert to a believable size in lira; figures you typed stay as typed |
 
 ## How the numbers are worked out
 
@@ -66,6 +68,10 @@ npm install
 npm run dev     # http://localhost:3000
 npm test
 ```
+
+## Photos
+
+From [Unsplash](https://unsplash.com), free under the Unsplash License, cropped so no product or brand is visible: [vending machine](https://unsplash.com/photos/dq7FTxwVeeE), [factory](https://unsplash.com/photos/hDXuYYMtQgY), [gym](https://unsplash.com/photos/2e4lbLTqPIo), [campus](https://unsplash.com/photos/Ma7aOy5mMp0), [hospital](https://unsplash.com/photos/Pd4lRfKo16U), [office](https://unsplash.com/photos/pYlBAu3de0w).
 
 ---
 

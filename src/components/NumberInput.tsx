@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useI18n } from "./I18n";
 
 type Props = {
   id: string;
@@ -19,19 +20,22 @@ type Props = {
 // Text, not type="number": the browser would otherwise show "2,5" or "2.5" depending on
 // the OS language. Both a comma and a point are accepted as the decimal mark.
 const toNumber = (s: string) => (s.trim() === "" ? 0 : Number(s.trim().replace(",", ".")));
+// Shown with the decimal mark of the page language: 2.5 in English, 2,5 in Turkish and Dutch.
+const show = (v: number, comma: boolean) => (comma ? String(v).replace(".", ",") : String(v));
 
 /**
  * Number field that lets the user clear it and retype without the value
  * snapping back. An empty field counts as 0 in the maths.
  */
 export function NumberInput({ id, value, onChange, min = 0, max, prefix, unit, measured, ...aria }: Props) {
-  const [raw, setRaw] = useState(String(value));
+  const comma = useI18n().lang !== "en";
+  const [raw, setRaw] = useState(show(value, comma));
   const [synced, setSynced] = useState(value);
 
   // A preset or URL change replaces the value from outside: show it.
   if (value !== synced) {
     setSynced(value);
-    if (toNumber(raw) !== value) setRaw(String(value));
+    if (toNumber(raw) !== value) setRaw(show(value, comma));
   }
 
   const parsed = toNumber(raw);

@@ -8,7 +8,10 @@ export type PaymentKind = "cash" | "cashless";
 
 export type PilotRow = { date: string; machine: string; sales: number; kind: PaymentKind };
 
-export type ParseResult = { rows: PilotRow[]; skipped: number; errors: string[] };
+/** Errors are codes; the interface turns them into text in the page language. */
+export type PilotError = { code: "empty" } | { code: "missing"; columns: string[] } | { code: "no-rows" };
+
+export type ParseResult = { rows: PilotRow[]; skipped: number; errors: PilotError[] };
 
 export type PilotAnalysis = {
   installDate: string;
@@ -85,7 +88,7 @@ export function parseDate(raw: string): string | null {
 
 export function parsePilotCsv(text: string): ParseResult {
   const lines = text.replace(/^﻿/, "").split(/\r?\n/).filter((l) => l.trim() !== "");
-  if (lines.length === 0) return { rows: [], skipped: 0, errors: ["The file is empty."] };
+  if (lines.length === 0) return { rows: [], skipped: 0, errors: [{ code: "empty" }] };
 
   const first = lines[0];
   const sep = [";", "\t", ","].find((c) => first.includes(c)) ?? ",";
@@ -98,7 +101,7 @@ export function parsePilotCsv(text: string): ParseResult {
     return {
       rows: [],
       skipped: 0,
-      errors: [`The first row needs the columns date, machine, sales and payment_type. Missing: ${missing.map((k) => names[k]).join(", ")}.`],
+      errors: [{ code: "missing", columns: missing.map((k) => names[k]) }],
     };
   }
 
@@ -117,7 +120,7 @@ export function parsePilotCsv(text: string): ParseResult {
     }
     rows.push({ date, machine, sales, kind });
   }
-  const errors = rows.length === 0 ? ["No readable rows. Check the dates, amounts and payment types."] : [];
+  const errors: PilotError[] = rows.length === 0 ? [{ code: "no-rows" }] : [];
   return { rows, skipped, errors };
 }
 

@@ -35,8 +35,8 @@ describe("parsePilotCsv", () => {
   });
 
   it("names the missing columns", () => {
-    expect(parsePilotCsv("date,machine,amount\n").errors[0]).toContain("Missing: payment_type");
-    expect(parsePilotCsv("").errors[0]).toBe("The file is empty.");
+    expect(parsePilotCsv("date,machine,amount\n").errors[0]).toEqual({ code: "missing", columns: ["payment_type"] });
+    expect(parsePilotCsv("").errors[0]).toEqual({ code: "empty" });
   });
 });
 

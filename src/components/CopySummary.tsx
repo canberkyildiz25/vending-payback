@@ -3,9 +3,11 @@
 import { useEffect, useRef, useState } from "react";
 import type { CalcState } from "@/lib/state";
 import { emailSummary } from "@/lib/summary";
+import { useI18n } from "./I18n";
 
 /** Copies a plain-text business case; shows it in a box when the clipboard is blocked. */
 export function CopySummary({ state }: { state: CalcState }) {
+  const { t, fmt } = useI18n(state.currency);
   const [copied, setCopied] = useState(false);
   const [fallback, setFallback] = useState<string | null>(null);
   const area = useRef<HTMLTextAreaElement>(null);
@@ -17,7 +19,7 @@ export function CopySummary({ state }: { state: CalcState }) {
   }, [fallback]);
 
   const copy = async () => {
-    const text = emailSummary(state);
+    const text = emailSummary(state, t, fmt);
     try {
       await navigator.clipboard.writeText(text);
       setFallback(null);
@@ -34,19 +36,19 @@ export function CopySummary({ state }: { state: CalcState }) {
       <button
         type="button"
         onClick={copy}
-        className="cursor-pointer rounded-md border border-display-grid bg-transparent px-3.5 py-2.5 text-sm font-semibold whitespace-nowrap text-display-ink transition-colors duration-150 hover:border-display-dim active:bg-white/[.06]"
+        className="inline-flex min-h-11 cursor-pointer items-center rounded-md border border-display-grid bg-transparent px-4 text-sm font-semibold whitespace-nowrap text-display-ink transition-colors duration-150 hover:border-display-dim active:bg-white/[.06]"
       >
-        Copy summary for an email
+        {t.display.copy}
       </button>
       <span className="text-[13px] text-display-pos" role="status">
-        {copied ? "Summary copied" : ""}
+        {copied ? t.display.copied : ""}
       </span>
       {fallback !== null && (
         <textarea
           ref={area}
           readOnly
           value={fallback}
-          aria-label="Summary text to copy"
+          aria-label={t.display.summaryAria}
           className="num min-h-40 w-full basis-full rounded-md border-0 bg-display-grid p-2.5 text-[13px] text-display-ink"
         />
       )}

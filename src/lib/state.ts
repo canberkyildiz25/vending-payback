@@ -2,7 +2,7 @@
 // worked-out case can be shared or opened as a client proposal.
 import type { FleetInputs } from "./payback";
 import { PRESETS, PRESET_IDS, type PresetId } from "./presets";
-import { CURRENCIES, SCENARIO_IDS, type Currency, type ScenarioId, type Scenarios } from "./scenarios";
+import { CURRENCIES, EXAMPLE_SCALE, SCENARIO_IDS, scaleMoney, type Currency, type ScenarioId, type Scenarios } from "./scenarios";
 
 export type CalcState = {
   preset: PresetId;
@@ -33,12 +33,16 @@ export function isMeasured(s: CalcState, k: "upliftPct" | "cardSharePct"): boole
   return v != null && s.scenarios.realistic[k] === pilotValue(v);
 }
 
-export function stateFromPreset(preset: PresetId, currency: Currency = "€"): CalcState {
+/** The preset's example fleet, in the given currency. */
+export const presetFleet = (preset: PresetId, currency: Currency): FleetInputs =>
+  scaleMoney(PRESETS[preset].fleet, EXAMPLE_SCALE[currency]);
+
+export function stateFromPreset(preset: PresetId, currency: Currency = "EUR"): CalcState {
   const p = PRESETS[preset];
   return {
     preset,
     currency,
-    fleet: { ...p.fleet },
+    fleet: presetFleet(preset, currency),
     scenarios: {
       conservative: { ...p.scenarios.conservative },
       realistic: { ...p.scenarios.realistic },
@@ -62,12 +66,11 @@ const FLEET_KEYS: Record<keyof FleetInputs, string> = {
   feePct: "pf",
 };
 const SCENARIO_KEY: Record<ScenarioId, string> = { conservative: "c", realistic: "r", optimistic: "o" };
-const CURRENCY_KEY: Record<Currency, string> = { "€": "EUR", $: "USD", "£": "GBP" };
 
 export function toSearchParams(s: CalcState): URLSearchParams {
   const q = new URLSearchParams();
   q.set("loc", s.preset);
-  q.set("cur", CURRENCY_KEY[s.currency]);
+  q.set("cur", s.currency);
   for (const k of Object.keys(FLEET_KEYS) as (keyof FleetInputs)[]) q.set(FLEET_KEYS[k], String(s.fleet[k]));
   for (const id of SCENARIO_IDS) {
     q.set(SCENARIO_KEY[id] + "u", String(s.scenarios[id].upliftPct));
@@ -101,7 +104,8 @@ export const readSearch = (sp: Search): Readable => ({
 export function fromSearchParams(q: Readable): CalcState {
   const loc = q.get("loc");
   const preset: PresetId = (PRESET_IDS as readonly string[]).includes(loc ?? "") ? (loc as PresetId) : "custom";
-  const cur = CURRENCIES.find((c) => CURRENCY_KEY[c.symbol] === q.get("cur"))?.symbol ?? "€";
+  const rawCur = q.get("cur");
+  const cur: Currency = (CURRENCIES as readonly string[]).includes(rawCur ?? "") ? (rawCur as Currency) : "EUR";
   const s = stateFromPreset(preset, cur);
   const read = (key: string, fallback: number) => {
     const raw = q.get(key);
@@ -132,4 +136,16 @@ export function fromSearchParams(q: Readable): CalcState {
     };
   }
   return s;
+}
+
+/**
+ * Switches currency. Money fields still holding the preset's example value are
+ * converted to the example in the new currency; figures the user typed stay as typed.
+ */
+export function changeCurrency(s: CalcState, next: Currency): CalcState {
+  const before = presetFleet(s.preset, s.currency);
+  const after = presetFleet(s.preset, next);
+  const fleet = { ...s.fleet };
+  for (const k of Object.keys(fleet) as (keyof FleetInputs)[]) if (fleet[k] === before[k]) fleet[k] = after[k];
+  return { ...s, currency: next, fleet };
 }

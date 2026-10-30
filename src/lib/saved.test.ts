@@ -10,7 +10,7 @@ function memoryStore() {
 describe("saved cases", () => {
   it("saves, lists newest first and reopens the exact state", () => {
     const store = memoryStore();
-    const gym = stateFromPreset("gym", "£");
+    const gym = stateFromPreset("gym", "GBP");
     gym.fleet.machines = 14;
     saveCase(store, "Gym prospect", gym, new Date("2026-10-01"));
     saveCase(store, "Hospital", stateFromPreset("hospital"), new Date("2026-10-02"));

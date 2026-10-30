@@ -3,20 +3,25 @@ import type { FleetInputs, ScenarioInputs } from "./payback";
 export const SCENARIO_IDS = ["conservative", "realistic", "optimistic"] as const;
 export type ScenarioId = (typeof SCENARIO_IDS)[number];
 
-export const SCENARIO_LABEL: Record<ScenarioId, string> = {
-  conservative: "Conservative",
-  realistic: "Realistic",
-  optimistic: "Optimistic",
-};
-
 export type Scenarios = Record<ScenarioId, ScenarioInputs>;
 
-export const CURRENCIES = [
-  { symbol: "€", label: "€ EUR" },
-  { symbol: "$", label: "$ USD" },
-  { symbol: "£", label: "£ GBP" },
-] as const;
-export type Currency = (typeof CURRENCIES)[number]["symbol"];
+export const CURRENCIES = ["EUR", "USD", "GBP", "TRY"] as const;
+export type Currency = (typeof CURRENCIES)[number];
+
+/**
+ * Example money values are written in euros. A rough, rounded multiplier keeps
+ * them believable in lira (a €300 reader is not a ₺300 reader). Payback and
+ * percentages do not depend on it: every money input scales together.
+ */
+export const EXAMPLE_SCALE: Record<Currency, number> = { EUR: 1, USD: 1, GBP: 1, TRY: 40 };
+
+const MONEY_FIELDS = ["dailySalesPerMachine", "handlingSavedPerMachine", "readerPrice", "monthlyServiceFee"] as const;
+
+export function scaleMoney(fleet: FleetInputs, factor: number): FleetInputs {
+  const out = { ...fleet };
+  for (const k of MONEY_FIELDS) out[k] = Math.round(fleet[k] * factor * 100) / 100;
+  return out;
+}
 
 /** Example values from v1. Not market data. */
 export const DEFAULT_FLEET: FleetInputs = {

@@ -1,11 +1,21 @@
 "use client";
 
+import Image, { type StaticImageData } from "next/image";
 import type { ReactNode } from "react";
+import campus from "@/assets/campus.webp";
+import custom from "@/assets/custom.webp";
+import factory from "@/assets/factory.webp";
+import gym from "@/assets/gym.webp";
+import hospital from "@/assets/hospital.webp";
+import office from "@/assets/office.webp";
 import type { FleetInputs } from "@/lib/payback";
-import { PRESETS, PRESET_IDS, type PresetId } from "@/lib/presets";
-import { CURRENCIES, SCENARIO_IDS, SCENARIO_LABEL, type Currency, type ScenarioId } from "@/lib/scenarios";
+import { PRESET_IDS, type PresetId } from "@/lib/presets";
+import { CURRENCIES, SCENARIO_IDS, type Currency, type ScenarioId } from "@/lib/scenarios";
 import { isMeasured, type CalcState } from "@/lib/state";
+import { useI18n } from "./I18n";
 import { NumberInput } from "./NumberInput";
+
+const PHOTO: Record<PresetId, StaticImageData> = { custom, factory, gym, campus, hospital, office };
 
 type Props = {
   state: CalcState;
@@ -15,17 +25,21 @@ type Props = {
   onScenario: (id: ScenarioId, k: "upliftPct" | "cardSharePct", v: number) => void;
 };
 
-export function EstimateTag() {
-  return <span className="ml-1 text-[10.5px] font-semibold uppercase tracking-[.06em] text-coin">your estimate</span>;
+function Tag({ children }: { children: ReactNode }) {
+  return <span className="ml-1.5 text-[10.5px] font-semibold tracking-[.06em] whitespace-nowrap text-coin uppercase">{children}</span>;
 }
 
 function Legend({ children }: { children: ReactNode }) {
-  return <legend className="label-caps mb-1 w-full border-b border-line pb-1.5 text-muted">{children}</legend>;
+  return (
+    <legend className="mb-1 w-full border-b border-line pb-2 font-display text-[17px] leading-tight font-bold [font-stretch:88%]">
+      {children}
+    </legend>
+  );
 }
 
 function Row({ id, label, hint, children }: { id: string; label: ReactNode; hint?: string; children: ReactNode }) {
   return (
-    <div className="grid grid-cols-[minmax(0,1fr)_128px] items-center gap-3">
+    <div className="grid grid-cols-[minmax(0,1fr)_minmax(0,128px)] items-center gap-3">
       <label htmlFor={id} className="text-sm leading-snug">
         {label}
         {hint && <small className="block text-xs text-muted">{hint}</small>}
@@ -36,53 +50,52 @@ function Row({ id, label, hint, children }: { id: string; label: ReactNode; hint
 }
 
 export function Worksheet({ state, onPreset, onCurrency, onFleet, onScenario }: Props) {
-  const { fleet, currency: sym } = state;
-  const preset = PRESETS[state.preset];
+  const { fleet } = state;
+  const { t, fmt } = useI18n(state.currency);
+  const sym = fmt.symbol;
   const f = (k: keyof FleetInputs) => ({ value: fleet[k], onChange: (v: number) => onFleet(k, v) });
+  const measured = (k: "upliftPct" | "cardSharePct") => isMeasured(state, k);
+  const p = t.presets[state.preset];
 
   return (
-    <form
-      className="flex min-w-0 flex-col gap-6 rounded-[10px] border border-line bg-panel p-5"
-      noValidate
-      onSubmit={(e) => e.preventDefault()}
-      aria-label="Fleet figures"
-    >
-      <fieldset className="flex min-w-0 flex-col gap-3">
-        <Legend>Start from a location type</Legend>
-        <div className="flex flex-wrap gap-2">
+    <form className="flex min-w-0 flex-col gap-7 rounded-[10px] border border-line bg-panel p-5 sm:p-6" noValidate onSubmit={(e) => e.preventDefault()} aria-label={t.sheet.aria}>
+      <fieldset className="m-0 flex min-w-0 flex-col gap-3 border-0 p-0">
+        <Legend>{t.sheet.startFrom}</Legend>
+        <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
           {PRESET_IDS.map((id) => (
             <label
               key={id}
-              className="cursor-pointer select-none rounded-md border border-line bg-bg px-3 py-1.5 text-sm whitespace-nowrap transition-colors duration-150 hover:border-muted has-checked:border-ink has-checked:bg-ink has-checked:text-panel has-focus-visible:outline-2 has-focus-visible:outline-offset-2 has-focus-visible:outline-accent"
+              className="group relative flex min-w-0 cursor-pointer flex-col overflow-hidden rounded-md border border-line bg-bg transition-colors duration-150 hover:border-muted has-checked:border-ink has-checked:ring-1 has-checked:ring-ink has-focus-visible:outline-2 has-focus-visible:outline-offset-2 has-focus-visible:outline-accent"
             >
-              <input
-                type="radio"
-                name="preset"
-                value={id}
-                checked={state.preset === id}
-                onChange={() => onPreset(id)}
-                className="sr-only"
+              <input type="radio" name="preset" value={id} checked={state.preset === id} onChange={() => onPreset(id)} className="sr-only" />
+              <Image
+                src={PHOTO[id]}
+                alt=""
+                sizes="(min-width: 640px) 160px, 45vw"
+                placeholder="blur"
+                className="aspect-[16/9] h-auto w-full object-cover grayscale transition-[filter] duration-200 group-hover:grayscale-0 group-has-checked:grayscale-0"
               />
-              {PRESETS[id].label}
+              <span className="flex min-h-10 items-center px-2.5 py-1.5 text-[13px] leading-tight font-semibold group-has-checked:bg-ink group-has-checked:text-panel">
+                {t.presets[id].label}
+              </span>
             </label>
           ))}
         </div>
         <div className="flex flex-wrap items-end justify-between gap-3">
-          <p className="m-0 max-w-[46ch] text-[12.5px] text-muted" aria-live="polite">
-            <strong className="font-semibold text-ink">Example values for {preset.phrase}.</strong> Replace them with your
-            own. {preset.hint}
+          <p className="m-0 max-w-[46ch] text-[13px] text-muted" aria-live="polite">
+            <strong className="font-semibold text-ink">{t.sheet.exampleFor(p.phrase)}</strong> {t.sheet.replace} {p.hint}
           </p>
           <label className="flex items-center gap-2 text-[13px] text-muted" htmlFor="currency">
-            Currency
+            {t.sheet.currency}
             <select
               id="currency"
-              value={sym}
+              value={state.currency}
               onChange={(e) => onCurrency(e.target.value as Currency)}
-              className="rounded-md border border-line bg-bg px-2 py-1.5 text-sm text-ink"
+              className="min-h-9 cursor-pointer rounded-md border border-line bg-bg px-2 py-1.5 text-sm text-ink hover:border-muted"
             >
               {CURRENCIES.map((c) => (
-                <option key={c.symbol} value={c.symbol}>
-                  {c.label}
+                <option key={c} value={c}>
+                  {c}
                 </option>
               ))}
             </select>
@@ -90,42 +103,39 @@ export function Worksheet({ state, onPreset, onCurrency, onFleet, onScenario }: 
         </div>
       </fieldset>
 
-      <fieldset className="flex min-w-0 flex-col gap-3">
-        <Legend>Your fleet today</Legend>
-        <Row id="machines" label="Machines">
+      <fieldset className="m-0 flex min-w-0 flex-col gap-3 border-0 p-0">
+        <Legend>{t.sheet.fleetToday}</Legend>
+        <Row id="machines" label={t.sheet.machines}>
           <NumberInput id="machines" min={1} {...f("machines")} />
         </Row>
-        <Row id="daily" label="Sales per machine per day" hint="Cash only, today">
+        <Row id="daily" label={t.sheet.dailySales} hint={t.sheet.dailySalesHint}>
           <NumberInput id="daily" prefix={sym} {...f("dailySalesPerMachine")} />
         </Row>
-        <Row id="days" label="Selling days per month">
+        <Row id="days" label={t.sheet.sellingDays}>
           <NumberInput id="days" min={1} max={31} {...f("sellingDays")} />
         </Row>
-        <Row id="margin" label="Gross margin on products" hint="What you keep after product cost">
+        <Row id="margin" label={t.sheet.margin} hint={t.sheet.marginHint}>
           <NumberInput id="margin" max={100} unit="%" {...f("marginPct")} />
         </Row>
       </fieldset>
 
-      <fieldset className="flex min-w-0 flex-col gap-3">
-        <Legend>With card payments: three estimates</Legend>
-        <p className="m-0 text-[12.5px] text-muted">
-          Nobody knows the exact uplift before a pilot. Give a low, a likely and a high figure; the display compares all
-          three.
-        </p>
+      <fieldset className="m-0 flex min-w-0 flex-col gap-3 border-0 p-0">
+        <Legend>{t.sheet.withCards}</Legend>
+        <p className="m-0 text-[13px] text-muted">{t.sheet.estimatesIntro}</p>
         <div role="group" aria-labelledby="sc-head" className="grid grid-cols-3 gap-x-2 gap-y-3 sm:grid-cols-[minmax(0,1fr)_repeat(3,88px)]">
           <span id="sc-head" className="sr-only">
-            Scenario estimates
+            {t.sheet.scenarioEstimates}
           </span>
           <span className="hidden sm:block" aria-hidden="true" />
           {SCENARIO_IDS.map((id) => (
-            <span key={id} className="label-caps text-right text-[11px] text-muted" aria-hidden="true">
-              {SCENARIO_LABEL[id]}
+            <span key={id} className="label-caps truncate text-right text-[11px] text-muted" aria-hidden="true">
+              {t.scenario[id]}
             </span>
           ))}
 
           <p id="uplift-label" className="col-span-3 m-0 text-sm leading-snug sm:col-span-1">
-            Sales increase <EstimateTag />
-            <small className="block text-xs text-muted">Buyers without coins can now pay</small>
+            {t.sheet.salesIncrease} <Tag>{t.sheet.yourEstimate}</Tag>
+            <small className="block text-xs text-muted">{t.sheet.salesIncreaseHint}</small>
           </p>
           {SCENARIO_IDS.map((id) => (
             <NumberInput
@@ -135,14 +145,14 @@ export function Worksheet({ state, onPreset, onCurrency, onFleet, onScenario }: 
               unit="%"
               value={state.scenarios[id].upliftPct}
               onChange={(v) => onScenario(id, "upliftPct", v)}
-              aria-label={`Sales increase, ${SCENARIO_LABEL[id]}${id === "realistic" && isMeasured(state, "upliftPct") ? ", measured from pilot data" : ""}`}
-              measured={id === "realistic" && isMeasured(state, "upliftPct")}
+              aria-label={`${t.sheet.salesIncrease}, ${t.scenario[id]}${id === "realistic" && measured("upliftPct") ? t.sheet.measuredSuffix : ""}`}
               aria-describedby="uplift-label"
+              measured={id === "realistic" && measured("upliftPct")}
             />
           ))}
 
           <p id="share-label" className="col-span-3 m-0 text-sm leading-snug sm:col-span-1">
-            Share paid by card or phone <EstimateTag />
+            {t.sheet.cardShare} <Tag>{t.sheet.yourEstimate}</Tag>
           </p>
           {SCENARIO_IDS.map((id) => (
             <NumberInput
@@ -152,35 +162,34 @@ export function Worksheet({ state, onPreset, onCurrency, onFleet, onScenario }: 
               unit="%"
               value={state.scenarios[id].cardSharePct}
               onChange={(v) => onScenario(id, "cardSharePct", v)}
-              aria-label={`Share paid by card or phone, ${SCENARIO_LABEL[id]}${id === "realistic" && isMeasured(state, "cardSharePct") ? ", measured from pilot data" : ""}`}
-              measured={id === "realistic" && isMeasured(state, "cardSharePct")}
+              aria-label={`${t.sheet.cardShare}, ${t.scenario[id]}${id === "realistic" && measured("cardSharePct") ? t.sheet.measuredSuffix : ""}`}
               aria-describedby="share-label"
+              measured={id === "realistic" && measured("cardSharePct")}
             />
           ))}
         </div>
-        {(isMeasured(state, "upliftPct") || isMeasured(state, "cardSharePct")) && (
+        {(measured("upliftPct") || measured("cardSharePct")) && (
           <p className="m-0 flex items-start gap-2 text-[12.5px] text-muted">
             <span className="mt-1.5 inline-block size-2 shrink-0 rounded-full bg-gain" aria-hidden="true" />
             <span>
-              <strong className="font-semibold text-ink">Green fields come from your pilot data.</strong> Change one and it
-              counts as your estimate again.
+              <strong className="font-semibold text-ink">{t.sheet.pilotFieldsStrong}</strong> {t.sheet.pilotFieldsRest}
             </span>
           </p>
         )}
-        <Row id="handling" label="Cash handling saved per machine per month" hint="Fewer collections, counting and coin top-ups">
+        <Row id="handling" label={t.sheet.handling} hint={t.sheet.handlingHint}>
           <NumberInput id="handling" prefix={sym} {...f("handlingSavedPerMachine")} />
         </Row>
       </fieldset>
 
-      <fieldset className="flex min-w-0 flex-col gap-3">
-        <Legend>Cost of the card readers</Legend>
-        <Row id="hardware" label="Reader price per machine" hint="One-off, including installation">
+      <fieldset className="m-0 flex min-w-0 flex-col gap-3 border-0 p-0">
+        <Legend>{t.sheet.readerCosts}</Legend>
+        <Row id="hardware" label={t.sheet.readerPrice} hint={t.sheet.readerPriceHint}>
           <NumberInput id="hardware" prefix={sym} {...f("readerPrice")} />
         </Row>
-        <Row id="service" label="Service fee per reader per month">
+        <Row id="service" label={t.sheet.serviceFee}>
           <NumberInput id="service" prefix={sym} {...f("monthlyServiceFee")} />
         </Row>
-        <Row id="fee" label="Card processing fee" hint="Charged on card and phone sales">
+        <Row id="fee" label={t.sheet.procFee} hint={t.sheet.procFeeHint}>
           <NumberInput id="fee" max={20} unit="%" {...f("feePct")} />
         </Row>
       </fieldset>

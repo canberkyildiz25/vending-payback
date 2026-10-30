@@ -1,5 +1,7 @@
 // Location-type starting points. Every number here is an example for a
 // conversation with a buyer, not a statistic. The UI labels them that way.
+// Names and hints per language live in i18n.ts. Money values are in euros;
+// see exampleScale for other currencies.
 import type { FleetInputs } from "./payback";
 import { DEFAULT_FLEET, DEFAULT_SCENARIOS, type Scenarios } from "./scenarios";
 
@@ -7,11 +9,6 @@ export const PRESET_IDS = ["custom", "factory", "gym", "campus", "hospital", "of
 export type PresetId = (typeof PRESET_IDS)[number];
 
 export type Preset = {
-  label: string;
-  /** Finishes the sentence "Example values for …". */
-  phrase: string;
-  /** Why the example looks the way it does. Shown under the picker. */
-  hint: string;
   fleet: FleetInputs;
   scenarios: Scenarios;
 };
@@ -20,16 +17,10 @@ const readers = { readerPrice: 300, monthlyServiceFee: 8, feePct: 2.5 };
 
 export const PRESETS: Record<PresetId, Preset> = {
   custom: {
-    label: "Any fleet",
-    phrase: "a mixed fleet",
-    hint: "A neutral starting point.",
     fleet: DEFAULT_FLEET,
     scenarios: DEFAULT_SCENARIOS,
   },
   factory: {
-    label: "Factory",
-    phrase: "a factory site",
-    hint: "Shift work six days a week, so 26 selling days and a modest card share.",
     fleet: { machines: 40, dailySalesPerMachine: 55, sellingDays: 26, marginPct: 40, handlingSavedPerMachine: 12, ...readers },
     scenarios: {
       conservative: { upliftPct: 5, cardSharePct: 30 },
@@ -38,9 +29,6 @@ export const PRESETS: Record<PresetId, Preset> = {
     },
   },
   gym: {
-    label: "Gym chain",
-    phrase: "a gym chain",
-    hint: "Open daily. Members often train without a wallet, so a higher card share.",
     fleet: { machines: 25, dailySalesPerMachine: 35, sellingDays: 30, marginPct: 45, handlingSavedPerMachine: 10, ...readers },
     scenarios: {
       conservative: { upliftPct: 10, cardSharePct: 50 },
@@ -49,9 +37,6 @@ export const PRESETS: Record<PresetId, Preset> = {
     },
   },
   campus: {
-    label: "Campus",
-    phrase: "a campus",
-    hint: "Busy in term time, quiet outside it, so fewer selling days.",
     fleet: { machines: 60, dailySalesPerMachine: 45, sellingDays: 24, marginPct: 40, handlingSavedPerMachine: 10, ...readers },
     scenarios: {
       conservative: { upliftPct: 8, cardSharePct: 55 },
@@ -60,9 +45,6 @@ export const PRESETS: Record<PresetId, Preset> = {
     },
   },
   hospital: {
-    label: "Hospital",
-    phrase: "a hospital",
-    hint: "Open every day, with visitors and staff buying around the clock.",
     fleet: { machines: 30, dailySalesPerMachine: 60, sellingDays: 30, marginPct: 38, handlingSavedPerMachine: 12, ...readers },
     scenarios: {
       conservative: { upliftPct: 5, cardSharePct: 40 },
@@ -71,9 +53,6 @@ export const PRESETS: Record<PresetId, Preset> = {
     },
   },
   office: {
-    label: "Office",
-    phrase: "an office building",
-    hint: "Weekdays only, so 21 selling days and a smaller fleet.",
     fleet: { machines: 20, dailySalesPerMachine: 30, sellingDays: 21, marginPct: 42, handlingSavedPerMachine: 8, ...readers },
     scenarios: {
       conservative: { upliftPct: 5, cardSharePct: 50 },

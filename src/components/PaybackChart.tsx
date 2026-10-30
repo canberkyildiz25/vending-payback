@@ -1,11 +1,13 @@
-import { shortMoney } from "@/lib/format";
+import type { Format } from "@/lib/format";
+import type { Messages } from "@/lib/i18n";
 import { HORIZON_MONTHS, cumulativeSeries, type PaybackResult } from "@/lib/payback";
-import { SCENARIO_IDS, SCENARIO_LABEL, type ScenarioId } from "@/lib/scenarios";
+import { SCENARIO_IDS, type ScenarioId } from "@/lib/scenarios";
 
 type Props = {
   results: Record<ScenarioId, PaybackResult>;
   selected: ScenarioId;
-  sym: string;
+  t: Messages;
+  fmt: Format;
 };
 
 const W = 560, H = 230, L = 64, R = 14, T = 14, B = 30;
@@ -15,7 +17,8 @@ const DASH: Record<ScenarioId, string | undefined> = { conservative: "5 4", real
  * Cumulative net position for the three scenarios. Colours come from
  * --series-* on the surrounding surface (dark display or paper sheet).
  */
-export function PaybackChart({ results, selected, sym }: Props) {
+export function PaybackChart({ results, selected, t, fmt }: Props) {
+  const label = t.scenario;
   const series = SCENARIO_IDS.map((id) => ({ id, pts: cumulativeSeries(results[id]) }));
   const all = series.flatMap((s) => s.pts);
   let lo = Math.min(0, ...all);
@@ -39,7 +42,7 @@ export function PaybackChart({ results, selected, sym }: Props) {
   const sel = results[selected];
   const desc = SCENARIO_IDS.map((id) => {
     const r = results[id];
-    return `${SCENARIO_LABEL[id]}: starts at ${shortMoney(-r.upfront, sym)}, ends month 36 at ${shortMoney(r.net3Years, sym)}`;
+    return t.display.chartSeries(label[id], fmt.shortMoney(-r.upfront), fmt.shortMoney(r.net3Years));
   }).join(". ");
 
   return (
@@ -50,22 +53,22 @@ export function PaybackChart({ results, selected, sym }: Props) {
             <svg width="22" height="8" aria-hidden="true">
               <line x1="1" x2="21" y1="4" y2="4" stroke={`var(--series-${id})`} strokeWidth={2.5} strokeDasharray={DASH[id]} strokeLinecap="round" />
             </svg>
-            {SCENARIO_LABEL[id]}
+            {label[id]}
           </li>
         ))}
       </ul>
-      <svg viewBox={`0 0 ${W} ${H}`} className="block h-auto w-full" role="img" aria-label={`Cumulative net position over 36 months. ${desc}.`}>
+      <svg viewBox={`0 0 ${W} ${H}`} className="block h-auto w-full" role="img" aria-label={`${t.display.chartAria} ${desc}.`}>
         {ticks.map((v) => (
           <g key={v}>
             <line x1={L} x2={W - R} y1={y(v)} y2={y(v)} stroke="var(--chart-grid)" strokeWidth={1} />
             <text x={L - 8} y={y(v) + 4} textAnchor="end" fontSize={11} fill="var(--chart-dim)" className="num">
-              {shortMoney(v, sym)}
+              {fmt.shortMoney(v)}
             </text>
           </g>
         ))}
         {[0, 12, 24, 36].map((m) => (
           <text key={m} x={x(m)} y={H - 8} textAnchor={m === 0 ? "start" : m === 36 ? "end" : "middle"} fontSize={11} fill="var(--chart-dim)" className="num">
-            {m === 0 ? "Start" : `Month ${m}`}
+            {m === 0 ? t.display.start : t.display.monthN(m)}
           </text>
         ))}
         <line x1={L} x2={W - R} y1={y(0)} y2={y(0)} stroke="var(--chart-dim)" strokeWidth={1} strokeDasharray="3 3" />
@@ -101,7 +104,7 @@ export function PaybackChart({ results, selected, sym }: Props) {
             <g>
               <circle cx={px} cy={py} r={5} fill={`var(--series-${selected})`} stroke="var(--chart-ink)" strokeWidth={1.5} />
               <text x={end ? px - 8 : px + 8} y={py - 12} textAnchor={end ? "end" : "start"} fontSize={12} fontWeight={600} fill="var(--chart-ink)" stroke="var(--chart-bg)" strokeWidth={4} paintOrder="stroke" strokeLinejoin="round">
-                {SCENARIO_LABEL[selected]} paid back
+                {t.display.paidBack(label[selected])}
               </text>
             </g>
           );
