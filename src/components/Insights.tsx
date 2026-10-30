@@ -15,6 +15,8 @@ export function Insights({ state, t, fmt }: { state: CalcState; t: Messages; fmt
   const sc = state.scenarios[state.selected];
   const be = breakEvenUplift(state.fleet, sc.cardSharePct);
   const delay = costOfDelay(state.fleet, sc, months);
+  // How much of the buyer's own estimate the case actually needs.
+  const used = be.kind === "needs" && sc.upliftPct > 0 ? (be.upliftPct / sc.upliftPct) * 100 : null;
 
   return (
     <div className="grid gap-x-5 gap-y-4 border-t border-display-grid pt-4 sm:grid-cols-2">
@@ -22,6 +24,12 @@ export function Insights({ state, t, fmt }: { state: CalcState; t: Messages; fmt
         <h3 className="label-caps m-0 text-display-dim">{I.breakEvenTitle}</h3>
         {be.kind === "needs" && <p key={be.upliftPct} className="num lcd-tick m-0 text-[28px] leading-tight font-semibold text-display-coin">{fmt.pct(be.upliftPct)}</p>}
         <p className="m-0 text-[13.5px]">{be.kind === "needs" ? I.needs(fmt.pct(be.upliftPct)) : be.kind === "no-growth-needed" ? I.noGrowth : I.impossible}</p>
+        {used !== null && (
+          <div className="mt-1 flex flex-col gap-1.5">
+            <progress className={`gel ${used > 100 ? "gel-bad" : ""}`} max={100} value={Math.min(used, 100)} aria-label={I.breakEvenTitle} />
+            <span className="num text-xs text-display-dim">{used > 100 ? I.meterOver : I.meterEstimate(fmt.pct(Math.round(used)))}</span>
+          </div>
+        )}
         <p className="m-0 text-xs text-display-dim">{I.versus(t.scenario[state.selected], fmt.pct(sc.upliftPct))}</p>
       </div>
       <div className="flex min-w-0 flex-col gap-1">

@@ -42,8 +42,8 @@ const en = {
     sticker: "Cash only",
     title: "What would card payments earn your vending fleet?",
     lede: "Enter your own fleet numbers to see the monthly gain, the payback period and the three-year return of adding card and phone payments to your machines. Compare a cautious, a likely and a hopeful case, then turn the result into a proposal for your client.",
-    heroAlt: "Empty spiral rows behind the glass of a vending machine at night, next to its keypad",
-    heroCaption: "Every customer without cash walks past a machine like this one.",
+    heroAlt: "A slowly turning globe with its country outlines drawn in yellow, glowing orange at the edge",
+    heroCaption: "A card works across borders. Local cash does not.",
   },
   scenario: { conservative: "Conservative", realistic: "Realistic", optimistic: "Optimistic" } satisfies Record<ScenarioId, string>,
   presets: {
@@ -278,8 +278,8 @@ const tr: Messages = {
     sticker: "Sadece nakit",
     title: "Kartlı ödeme otomat filonuza ne kazandırır?",
     lede: "Kendi filo rakamlarınızı girin; makinelerinize kartlı ve telefonla ödeme eklemenin aylık kazancını, geri dönüş süresini ve üç yıllık getirisini görün. Temkinli, olası ve iyimser durumu karşılaştırın, ardından sonucu müşteriniz için bir teklife dönüştürün.",
-    heroAlt: "Gece bir otomatın camının arkasında boş spiral raflar ve yanında tuş takımı",
-    heroCaption: "Üzerinde nakit olmayan her müşteri böyle bir makinenin önünden geçip gidiyor.",
+    heroAlt: "Ülke sınırları sarıyla çizilmiş, kenarı turuncu parlayan, yavaşça dönen bir dünya",
+    heroCaption: "Kart sınır tanımaz. Yerel nakit tanır.",
   },
   scenario: { conservative: "Temkinli", realistic: "Gerçekçi", optimistic: "İyimser" },
   presets: {
@@ -512,8 +512,8 @@ const nl: Messages = {
     sticker: "Alleen contant",
     title: "Wat levert pinbetalen uw automatenpark op?",
     lede: "Vul de cijfers van uw eigen automatenpark in en zie de maandelijkse winst, de terugverdientijd en het rendement over drie jaar van pin- en mobiel betalen op uw automaten. Vergelijk een voorzichtig, een waarschijnlijk en een hoopvol scenario en maak van de uitkomst een voorstel voor uw klant.",
-    heroAlt: "Lege spiralen achter het glas van een snackautomaat 's nachts, naast het toetsenpaneel",
-    heroCaption: "Elke klant zonder contant geld loopt langs een automaat als deze.",
+    heroAlt: "Een langzaam draaiende wereldbol met landsgrenzen in geel en een oranje gloed aan de rand",
+    heroCaption: "Een kaart werkt over de grens. Lokaal contant geld niet.",
   },
   scenario: { conservative: "Voorzichtig", realistic: "Realistisch", optimistic: "Optimistisch" },
   presets: {

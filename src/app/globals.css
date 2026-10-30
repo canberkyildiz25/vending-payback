@@ -184,6 +184,24 @@ body {
 .fader:hover::-webkit-slider-thumb { background: #ff8238; }
 .fader:hover::-moz-range-thumb { background: #ff8238; }
 
+/* glass tube with gel inside: a real <progress>, so no extra markup and no JS */
+.gel {
+  -webkit-appearance: none; appearance: none; display: block; width: 100%; height: 24px; border: 0; border-radius: 999px;
+  background: #161616; overflow: hidden;
+  box-shadow: 0 0 0 1px #5a5a5a, 0 0 0 4px rgb(255 255 255 / .07), inset 0 2px 6px #000;
+}
+.gel::-webkit-progress-bar { background: linear-gradient(#0c0c0c, #2a2a2a); border-radius: 999px; box-shadow: inset 0 2px 6px #000, inset 0 -1px 0 rgb(255 255 255 / .14); }
+.gel::-webkit-progress-value {
+  border-radius: 999px;
+  background: linear-gradient(rgb(255 255 255 / .62), rgb(255 255 255 / .08) 42%, rgb(0 0 0 / .05) 60%, rgb(255 255 255 / .22)), linear-gradient(90deg, var(--orange), var(--yellow));
+}
+.gel::-moz-progress-bar {
+  border-radius: 999px;
+  background: linear-gradient(rgb(255 255 255 / .62), rgb(255 255 255 / .08) 42%, rgb(0 0 0 / .05) 60%, rgb(255 255 255 / .22)), linear-gradient(90deg, var(--orange), var(--yellow));
+}
+.gel.gel-bad::-webkit-progress-value { background: linear-gradient(rgb(255 255 255 / .5), rgb(255 255 255 / .05) 45%, rgb(255 255 255 / .18)), linear-gradient(90deg, #a83c00, var(--display-neg)); }
+.gel.gel-bad::-moz-progress-bar { background: linear-gradient(rgb(255 255 255 / .5), rgb(255 255 255 / .05) 45%, rgb(255 255 255 / .18)), linear-gradient(90deg, #a83c00, var(--display-neg)); }
+
 /* till receipt, torn at the bottom */
 .receipt {
   background: var(--bg); color: var(--ink); padding: 16px 18px 26px;

@@ -1,7 +1,6 @@
-import Image from "next/image";
 import Link from "next/link";
-import hero from "@/assets/hero.webp";
 import { Calculator } from "@/components/Calculator";
+import { Globe } from "@/components/Globe";
 import { MethodList, SiteFooter } from "@/components/Method";
 import { TopBar } from "@/components/TopBar";
 import { MESSAGES } from "@/lib/i18n";
@@ -19,7 +18,7 @@ export default async function Home({ searchParams }: { searchParams: Promise<Sea
 
       <header className="flex flex-col gap-7">
         <h1 className="fascia m-0">{t.header.title}</h1>
-        <div className="grid items-end gap-x-10 gap-y-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
+        <div className="grid items-center gap-x-10 gap-y-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
           <div className="flex min-w-0 flex-col gap-4">
             <p className="m-0 max-w-[58ch] text-[16px]">{t.header.lede}</p>
             <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
@@ -32,7 +31,7 @@ export default async function Home({ searchParams }: { searchParams: Promise<Sea
             </div>
           </div>
           <figure className="shelf m-0 flex min-w-0 flex-col">
-            <Image src={hero} alt={t.header.heroAlt} priority placeholder="blur" sizes="(min-width: 1024px) 520px, 100vw" className="signal-in aspect-[21/9] h-auto w-full object-cover grayscale contrast-110" />
+            <Globe label={t.header.heroAlt} />
             <figcaption className="rail">{t.header.heroCaption}</figcaption>
           </figure>
         </div>

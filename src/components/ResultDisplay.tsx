@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { verdictFor, type PaybackResult } from "@/lib/payback";
+import { HORIZON_MONTHS, verdictFor, type PaybackResult } from "@/lib/payback";
 import { SCENARIO_IDS, type ScenarioId } from "@/lib/scenarios";
 import type { CalcState } from "@/lib/state";
 import { CopySummary } from "./CopySummary";
@@ -38,6 +38,7 @@ export function ResultDisplay({ state, results, onSelect, proposalHref }: Props)
   const r = results[state.selected];
   const pb = fmt.paybackLabel(r.paybackMonths);
   const label = t.scenario[state.selected];
+  const paidBack = r.paybackMonths <= HORIZON_MONTHS;
 
   const rows: [string, string][] = [
     [d.extraProfit, fmt.signedMoney(r.extraGrossProfit)],
@@ -56,6 +57,16 @@ export function ResultDisplay({ state, results, onSelect, proposalHref }: Props)
           <div className="flex flex-wrap items-baseline gap-2.5">
             <span key={pb.value} className="num lcd lcd-tick text-[clamp(64px,10vw,104px)] leading-none font-semibold tracking-[-.03em]">{pb.value}</span>
             {pb.unit && <span className="sign text-[28px]">{pb.unit}</span>}
+          </div>
+          <div className="mt-3 flex flex-col gap-1.5">
+            <progress
+              className={`gel ${paidBack ? "" : "gel-bad"}`}
+              max={HORIZON_MONTHS}
+              value={paidBack ? r.paybackMonths : HORIZON_MONTHS}
+              aria-label={d.paybackPeriod}
+              aria-valuetext={paidBack ? t.sales.insight.meterPayback(fmt.num(r.paybackMonths)) : t.sales.insight.meterNever}
+            />
+            <span className="num text-xs text-display-dim">{paidBack ? t.sales.insight.meterPayback(fmt.num(r.paybackMonths)) : t.sales.insight.meterNever}</span>
           </div>
           <p className="m-0 mt-2 text-sm text-display-dim">{d.verdict[verdictFor(r.paybackMonths)]}</p>
         </div>
