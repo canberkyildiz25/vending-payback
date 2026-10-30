@@ -21,7 +21,7 @@ export async function generateMetadata(): Promise<Metadata> {
 /** One beat of the conversation: what happens on the left, the evidence on the right, the lesson underneath. */
 function Beat({ n, title, body, lesson, children }: { n: number; title: string; body: ReactNode; lesson: string; children: ReactNode }) {
   return (
-    <section className="beat grid items-start gap-x-10 gap-y-4 border-t-2 border-[#5f4028] pt-7 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.2fr)]">
+    <section className="beat grid items-start gap-x-10 gap-y-4 border-t-2 border-[#5a5545] pt-7 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.2fr)]">
       <div className="on-cabinet flex min-w-0 flex-col gap-2.5">
         <span className="num text-sm text-coin">{n} / 4</span>
         <h2 className="sign m-0 text-[clamp(30px,4.2vw,44px)] text-balance">{title}</h2>
@@ -47,7 +47,7 @@ export default async function CasePage() {
 
   return (
     <main className="mx-auto flex max-w-[1120px] flex-col gap-8 px-4 pt-5 pb-10">
-      <div className="on-sand -mt-5 flex flex-col gap-6 pt-5 pb-9">
+      <div className="on-sign -mt-5 flex flex-col gap-6 pt-5 pb-9">
       <TopBar t={t} page="case" />
       <header className="flex flex-col gap-4">
         <h1 className="fascia m-0">{C.title}</h1>

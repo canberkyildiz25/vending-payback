@@ -43,16 +43,16 @@ export function Globe({ label }: { label: string }) {
 
       // low sun, upper left
       const sun = ctx.createRadialGradient(cx - r * 0.62, cy - r * 0.6, 0, cx - r * 0.62, cy - r * 0.6, r * 0.55);
-      sun.addColorStop(0, "rgba(237,185,130,.65)");
-      sun.addColorStop(1, "rgba(237,185,130,0)");
+      sun.addColorStop(0, "rgba(255,74,59,.6)");
+      sun.addColorStop(1, "rgba(255,74,59,0)");
       ctx.fillStyle = sun;
       ctx.fillRect(0, 0, w, h);
 
       // atmosphere
       const air = ctx.createRadialGradient(cx, cy, r * 0.82, cx, cy, r * 1.14);
-      air.addColorStop(0, "rgba(237,185,130,0)");
-      air.addColorStop(0.45, "rgba(237,185,130,.5)");
-      air.addColorStop(1, "rgba(237,185,130,0)");
+      air.addColorStop(0, "rgba(184,221,214,0)");
+      air.addColorStop(0.45, "rgba(184,221,214,.5)");
+      air.addColorStop(1, "rgba(184,221,214,0)");
       ctx.fillStyle = air;
       ctx.fillRect(0, 0, w, h);
 
@@ -61,7 +61,7 @@ export function Globe({ label }: { label: string }) {
 
       ctx.beginPath();
       path({ type: "Sphere" });
-      ctx.fillStyle = "rgba(15,7,3,.94)";
+      ctx.fillStyle = "rgba(15,14,10,.94)";
       ctx.fill();
 
       ctx.beginPath();
@@ -73,23 +73,23 @@ export function Globe({ label }: { label: string }) {
       if (land && borders) {
         ctx.beginPath();
         path(land);
-        ctx.fillStyle = "rgba(202,146,83,.16)";
+        ctx.fillStyle = "rgba(147,135,110,.2)";
         ctx.fill();
         ctx.beginPath();
         path(borders);
-        ctx.strokeStyle = "rgba(222,230,76,.38)";
+        ctx.strokeStyle = "rgba(184,221,214,.38)";
         ctx.lineWidth = 0.5;
         ctx.stroke();
         ctx.beginPath();
         path(land);
-        ctx.strokeStyle = "rgba(222,230,76,.95)";
+        ctx.strokeStyle = "rgba(184,221,214,.95)";
         ctx.lineWidth = 0.8;
         ctx.stroke();
       }
 
       ctx.beginPath();
       path({ type: "Sphere" });
-      ctx.strokeStyle = "rgba(238,205,182,.85)";
+      ctx.strokeStyle = "rgba(240,238,226,.85)";
       ctx.lineWidth = 1;
       ctx.stroke();
     };
