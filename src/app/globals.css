@@ -10,6 +10,7 @@
   --cabinet: #26231a;
   --cabinet-deep: #14120c;
   --sign: #ff4a3b;
+  --panel-sign: #f0eee2;
   --signal: #b8ddd6;
   --bg: #fbfaf4;
   --panel: #f0eee2;
@@ -50,17 +51,17 @@
   color: var(--ink); color-scheme: dark;
 }
 
-/* the sign across the top of the machine: full-bleed cinnabar, near-black lettering */
+/* the sign across the top of the machine: full-bleed ivory, easy on the eye, with a cinnabar stripe under it */
 .on-sign {
-  --ink: #1f1c14; --muted: #1f1c14; --line: #1f1c14; --accent: #1f1c14; --coin: #1f1c14;
-  --panel: #f0eee2; --bg: #f0eee2;
-  color: var(--ink); color-scheme: light;
-  background: var(--sign); box-shadow: 0 0 0 100vmax var(--sign); clip-path: inset(-100vmax -100vmax 0);
+  --ink: #1f1c14; --muted: #5c5443; --line: #93876e; --accent: #b3261a; --coin: #b3261a;
+  --panel: #fbfaf4; --bg: #fbfaf4;
+  color: var(--ink); color-scheme: light; position: relative;
+  background: var(--panel-sign); box-shadow: 0 0 0 100vmax var(--panel-sign); clip-path: inset(-100vmax -100vmax 0);
 }
+.on-sign::after { content: ""; position: absolute; left: -100vmax; right: -100vmax; bottom: 0; height: 8px; background: var(--sign); }
 .on-sign :focus-visible { outline-color: #1f1c14; }
-.on-sign .key-brass { background: #1f1c14; color: var(--signal); box-shadow: inset 0 1px 0 #4a4537, inset 0 -3px 0 #14120c; }
-.on-sign .key-brass:hover { background: #3a372c; }
-.on-sign .key-brass:active { box-shadow: inset 0 3px 0 #14120c; }
+.on-sign .sticker { background: var(--sign); }
+.on-sign .sticker::after { background: #1f1c14; }
 
 @theme inline {
   --color-bg: var(--bg);
