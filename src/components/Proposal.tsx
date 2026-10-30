@@ -6,7 +6,7 @@ import { money, paybackText, pct } from "@/lib/format";
 import { computePayback, type FleetInputs, type PaybackResult } from "@/lib/payback";
 import { PRESETS } from "@/lib/presets";
 import { SCENARIO_IDS, SCENARIO_LABEL, type ScenarioId } from "@/lib/scenarios";
-import { toSearchParams, type CalcState } from "@/lib/state";
+import { isMeasured, toSearchParams, type CalcState } from "@/lib/state";
 import { MethodList, Signature } from "./Method";
 import { PaybackChart } from "./PaybackChart";
 
@@ -50,6 +50,10 @@ function ExampleMark() {
 }
 function EstimateMark() {
   return <span className="ml-1.5 text-[10.5px] font-semibold tracking-[.06em] text-paper-coin uppercase">estimate</span>;
+}
+
+function MeasuredMark() {
+  return <span className="mr-1.5 font-sans text-[10.5px] font-semibold tracking-[.06em] text-paper-gain uppercase">measured</span>;
 }
 
 function Th({ children, className = "" }: { children?: ReactNode; className?: string }) {
@@ -230,7 +234,10 @@ export function Proposal({ initial, initialClient, initialBy }: Props) {
                     Sales increase <EstimateMark />
                   </Td>
                   {SCENARIO_IDS.map((id) => (
-                    <Td key={id} className="text-right">{pct(state.scenarios[id].upliftPct)}</Td>
+                    <Td key={id} className="text-right">
+                      {id === "realistic" && isMeasured(state, "upliftPct") && <MeasuredMark />}
+                      {pct(state.scenarios[id].upliftPct)}
+                    </Td>
                   ))}
                 </tr>
                 <tr>
@@ -238,7 +245,10 @@ export function Proposal({ initial, initialClient, initialBy }: Props) {
                     Paid by card or phone <EstimateMark />
                   </Td>
                   {SCENARIO_IDS.map((id) => (
-                    <Td key={id} className="text-right">{pct(state.scenarios[id].cardSharePct)}</Td>
+                    <Td key={id} className="text-right">
+                      {id === "realistic" && isMeasured(state, "cardSharePct") && <MeasuredMark />}
+                      {pct(state.scenarios[id].cardSharePct)}
+                    </Td>
                   ))}
                 </tr>
                 <tr>
@@ -262,6 +272,13 @@ export function Proposal({ initial, initialClient, initialBy }: Props) {
               </tbody>
             </table>
           </div>
+          {state.pilot && (isMeasured(state, "upliftPct") || isMeasured(state, "cardSharePct")) && (
+            <p className="m-0 text-sm text-paper-muted">
+              “Measured” figures in the realistic case come from pilot data on {state.pilot.machines} machines
+              {state.pilot.daysBefore > 0 ? `,  days before and  days after the readers went in` : `,  days with readers`}
+              . The other cases remain estimates.
+            </p>
+          )}
           <p className="m-0 text-sm text-paper-muted">
             Upfront investment in every case: <span className="num text-paper-ink">{money(base.upfront, sym)}</span> for{" "}
             {state.fleet.machines} card readers, installed.

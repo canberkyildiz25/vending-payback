@@ -4,7 +4,7 @@ import type { ReactNode } from "react";
 import type { FleetInputs } from "@/lib/payback";
 import { PRESETS, PRESET_IDS, type PresetId } from "@/lib/presets";
 import { CURRENCIES, SCENARIO_IDS, SCENARIO_LABEL, type Currency, type ScenarioId } from "@/lib/scenarios";
-import type { CalcState } from "@/lib/state";
+import { isMeasured, type CalcState } from "@/lib/state";
 import { NumberInput } from "./NumberInput";
 
 type Props = {
@@ -135,7 +135,8 @@ export function Worksheet({ state, onPreset, onCurrency, onFleet, onScenario }: 
               unit="%"
               value={state.scenarios[id].upliftPct}
               onChange={(v) => onScenario(id, "upliftPct", v)}
-              aria-label={`Sales increase, ${SCENARIO_LABEL[id]}`}
+              aria-label={`Sales increase, ${SCENARIO_LABEL[id]}${id === "realistic" && isMeasured(state, "upliftPct") ? ", measured from pilot data" : ""}`}
+              measured={id === "realistic" && isMeasured(state, "upliftPct")}
               aria-describedby="uplift-label"
             />
           ))}
@@ -151,11 +152,21 @@ export function Worksheet({ state, onPreset, onCurrency, onFleet, onScenario }: 
               unit="%"
               value={state.scenarios[id].cardSharePct}
               onChange={(v) => onScenario(id, "cardSharePct", v)}
-              aria-label={`Share paid by card or phone, ${SCENARIO_LABEL[id]}`}
+              aria-label={`Share paid by card or phone, ${SCENARIO_LABEL[id]}${id === "realistic" && isMeasured(state, "cardSharePct") ? ", measured from pilot data" : ""}`}
+              measured={id === "realistic" && isMeasured(state, "cardSharePct")}
               aria-describedby="share-label"
             />
           ))}
         </div>
+        {(isMeasured(state, "upliftPct") || isMeasured(state, "cardSharePct")) && (
+          <p className="m-0 flex items-start gap-2 text-[12.5px] text-muted">
+            <span className="mt-1.5 inline-block size-2 shrink-0 rounded-full bg-gain" aria-hidden="true" />
+            <span>
+              <strong className="font-semibold text-ink">Green fields come from your pilot data.</strong> Change one and it
+              counts as your estimate again.
+            </span>
+          </p>
+        )}
         <Row id="handling" label="Cash handling saved per machine per month" hint="Fewer collections, counting and coin top-ups">
           <NumberInput id="handling" prefix={sym} {...f("handlingSavedPerMachine")} />
         </Row>

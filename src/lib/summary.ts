@@ -1,7 +1,7 @@
 import { money, paybackText, pct } from "./format";
 import { computePayback } from "./payback";
 import { SCENARIO_IDS, SCENARIO_LABEL } from "./scenarios";
-import type { CalcState } from "./state";
+import { isMeasured, type CalcState } from "./state";
 
 /** Plain-text business case for pasting into a client email. */
 export function emailSummary(s: CalcState): string {
@@ -30,6 +30,9 @@ export function emailSummary(s: CalcState): string {
       `${money(s.fleet.monthlyServiceFee, sym, 2)} service fee per reader per month, ` +
       `${money(s.fleet.handlingSavedPerMachine, sym)} cash handling saved per machine per month.`,
     "Only the margin on extra sales is counted as gain, not the extra revenue.",
+    ...(s.pilot && (isMeasured(s, "upliftPct") || isMeasured(s, "cardSharePct"))
+      ? [`The realistic case uses figures measured on a pilot of ${s.pilot.machines} machines; the other cases are estimates.`]
+      : []),
     "",
     "Happy to walk through these figures with your own data from a pilot.",
   );

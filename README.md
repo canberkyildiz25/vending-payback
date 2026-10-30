@@ -25,11 +25,23 @@ This tool is built around that conversation:
 | Location presets | Factory, gym chain, campus, hospital, office; fills the worksheet with labelled example values |
 | Client proposal | Client name, optional logo (stays in the browser), all three cases, assumptions and method; prints to A4 or saves as PDF |
 | Shareable state | The address bar holds every input, so a worked-out case can be bookmarked or sent |
+| Pilot data | Upload a CSV (date, machine, sales, payment type) from machines that already have readers. The card share and the sales increase are measured, the realistic case uses them, and they are marked "measured" in the proposal. The file is read in the browser and never uploaded. An example file with invented data is included |
+| Saved client cases | Save, list, open and delete named cases in the browser (localStorage), with Undo on delete |
 | Email summary | Copies a plain-text business case for a client email |
 
-Planned next: pilot data upload (CSV of date, machine, sales, payment type) that replaces the estimates with measured figures, and saved client scenarios in the browser.
-
 ## How the numbers are worked out
+
+From pilot data:
+
+```
+card share     = card and phone sales ÷ all sales, from the install date on
+sales increase = average sales per machine per day after the install
+                 ÷ the same before it − 1, on machines with data on both sides
+```
+
+The install date defaults to the first day with a card or phone sale and can be changed. A before-and-after comparison also picks up seasonal effects, so a longer pilot gives a steadier figure.
+
+Business case:
 
 ```
 monthly sales today   = machines × sales per machine per day × selling days

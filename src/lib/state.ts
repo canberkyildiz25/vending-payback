@@ -10,7 +10,28 @@ export type CalcState = {
   fleet: FleetInputs;
   scenarios: Scenarios;
   selected: ScenarioId;
+  /** Figures measured from uploaded pilot data, when the user applied them. */
+  pilot: PilotFigures | null;
 };
+
+export type PilotFigures = {
+  upliftPct: number | null;
+  cardSharePct: number | null;
+  machines: number;
+  daysBefore: number;
+  daysAfter: number;
+  /** The realistic estimates the pilot figures replaced, so they can be put back. */
+  replaced: { upliftPct: number; cardSharePct: number };
+};
+
+/** Pilot value as it goes into a scenario: a measured fall in sales counts as no increase. */
+export const pilotValue = (v: number) => Math.max(0, v);
+
+/** True while the realistic field still holds the measured figure (editing it makes it an estimate again). */
+export function isMeasured(s: CalcState, k: "upliftPct" | "cardSharePct"): boolean {
+  const v = s.pilot?.[k];
+  return v != null && s.scenarios.realistic[k] === pilotValue(v);
+}
 
 export function stateFromPreset(preset: PresetId, currency: Currency = "€"): CalcState {
   const p = PRESETS[preset];
@@ -24,6 +45,7 @@ export function stateFromPreset(preset: PresetId, currency: Currency = "€"): C
       optimistic: { ...p.scenarios.optimistic },
     },
     selected: "realistic",
+    pilot: null,
   };
 }
 
@@ -52,6 +74,15 @@ export function toSearchParams(s: CalcState): URLSearchParams {
     q.set(SCENARIO_KEY[id] + "s", String(s.scenarios[id].cardSharePct));
   }
   q.set("sel", s.selected);
+  if (s.pilot) {
+    if (s.pilot.upliftPct != null) q.set("plu", String(s.pilot.upliftPct));
+    if (s.pilot.cardSharePct != null) q.set("pls", String(s.pilot.cardSharePct));
+    q.set("plm", String(s.pilot.machines));
+    q.set("plb", String(s.pilot.daysBefore));
+    q.set("pla", String(s.pilot.daysAfter));
+    q.set("pru", String(s.pilot.replaced.upliftPct));
+    q.set("prs", String(s.pilot.replaced.cardSharePct));
+  }
   return q;
 }
 
@@ -85,5 +116,20 @@ export function fromSearchParams(q: Readable): CalcState {
   }
   const sel = q.get("sel");
   if ((SCENARIO_IDS as readonly string[]).includes(sel ?? "")) s.selected = sel as ScenarioId;
+  if (q.get("pla") !== null) {
+    const opt = (k: string) => {
+      const raw = q.get(k);
+      const v = raw === null ? NaN : Number(raw);
+      return Number.isFinite(v) ? v : null;
+    };
+    s.pilot = {
+      upliftPct: opt("plu"),
+      cardSharePct: opt("pls"),
+      machines: read("plm", 0),
+      daysBefore: read("plb", 0),
+      daysAfter: read("pla", 0),
+      replaced: { upliftPct: read("pru", s.scenarios.realistic.upliftPct), cardSharePct: read("prs", s.scenarios.realistic.cardSharePct) },
+    };
+  }
   return s;
 }

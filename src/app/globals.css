@@ -31,6 +31,7 @@
   --paper-line: #d9dcd8;
   --paper-coin: #9a6400;
   --paper-accent: #2346c4;
+  --paper-gain: #1d7a4f;
 
   --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
 }
@@ -72,6 +73,7 @@
   --color-paper-line: var(--paper-line);
   --color-paper-coin: var(--paper-coin);
   --color-paper-accent: var(--paper-accent);
+  --color-paper-gain: var(--paper-gain);
 
   --font-display: var(--font-archivo), "Arial Narrow", system-ui, sans-serif;
   --font-sans: var(--font-plex-sans), system-ui, -apple-system, "Segoe UI", sans-serif;
@@ -121,6 +123,7 @@ body {
 .inp input:hover { border-color: var(--muted); }
 .inp input:focus-visible { border-color: var(--accent); outline-offset: 1px; }
 .inp input[aria-invalid="true"] { border-color: var(--loss); }
+.inp.is-measured input { border-color: var(--gain); box-shadow: inset 3px 0 0 var(--gain); }
 .inp.has-unit input { padding-right: 30px; }
 .inp.has-prefix input { padding-left: 26px; }
 .inp .unit, .inp .prefix { position: absolute; font: 500 12px var(--font-mono); color: var(--muted); pointer-events: none; }

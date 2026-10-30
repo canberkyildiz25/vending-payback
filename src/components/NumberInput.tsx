@@ -10,6 +10,8 @@ type Props = {
   max?: number;
   prefix?: string;
   unit?: string;
+  /** Marks a value that came from pilot data rather than an estimate. */
+  measured?: boolean;
   "aria-label"?: string;
   "aria-describedby"?: string;
 };
@@ -22,7 +24,7 @@ const toNumber = (s: string) => (s.trim() === "" ? 0 : Number(s.trim().replace("
  * Number field that lets the user clear it and retype without the value
  * snapping back. An empty field counts as 0 in the maths.
  */
-export function NumberInput({ id, value, onChange, min = 0, max, prefix, unit, ...aria }: Props) {
+export function NumberInput({ id, value, onChange, min = 0, max, prefix, unit, measured, ...aria }: Props) {
   const [raw, setRaw] = useState(String(value));
   const [synced, setSynced] = useState(value);
 
@@ -36,7 +38,7 @@ export function NumberInput({ id, value, onChange, min = 0, max, prefix, unit, .
   const invalid = !Number.isFinite(parsed) || parsed < min || (max !== undefined && parsed > max);
 
   return (
-    <div className={"inp" + (prefix ? " has-prefix" : "") + (unit ? " has-unit" : "")}>
+    <div className={"inp" + (prefix ? " has-prefix" : "") + (unit ? " has-unit" : "") + (measured ? " is-measured" : "")}>
       {prefix && <span className="prefix" aria-hidden="true">{prefix}</span>}
       <input
         id={id}
