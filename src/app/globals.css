@@ -1,57 +1,66 @@
 /* Hallmark · macrostructure: bespoke, the page is a vending machine · tone: industrial, printed, physical
  * theme: custom (vibe: "enamel cabinet, printed route sheet, till receipt")
- * cabinet cobalt #1b37a3 · paper #f3efe4 · brass #f2b544 · Archivo (62–90 width) + IBM Plex Sans + IBM Plex Mono
+ * sign orange #ff6a13 · cabinet #1c1c1c · paper grey #e6e4df · signal yellow #ffc400 · Archivo (62–90 width) + IBM Plex Sans + IBM Plex Mono
  * pre-emit critique: P5 H4 E4 S5 R4 V5
  */
 @import "tailwindcss";
 
-/* Defaults describe printed paper. .on-cabinet re-points them for text painted on the enamel. */
+/* Defaults describe printed paper. .on-cabinet and .on-orange re-point them for painted surfaces. */
 :root {
-  --cabinet: #1b37a3;
-  --cabinet-deep: #142a80;
-  --bg: #fbf8f0;
-  --panel: #f3efe4;
-  --ink: #17202b;
-  --muted: #56606a;
-  --line: #c9c2b0;
-  --accent: #1b37a3;
-  --coin: #855700;
+  --cabinet: #1c1c1c;
+  --cabinet-deep: #0f0f0f;
+  --orange: #ff6a13;
+  --yellow: #ffc400;
+  --bg: #f7f6f2;
+  --panel: #e6e4df;
+  --ink: #141414;
+  --muted: #55524c;
+  --line: #bdb9b0;
+  --accent: #a83c00;
+  --coin: #a83c00;
   --gain: #1d7a4f;
   --loss: #a93226;
-  --display-bg: #0a0d10;
-  --display-ink: #eef1ee;
-  --display-dim: #929da3;
-  --display-coin: #f2b544;
-  --display-cobalt: #93a8ff;
-  --display-grid: #272c31;
-  --display-pos: #6fdca5;
-  --display-neg: #ff9a8c;
-  --metal: #2b2f35;
-  --metal-hi: #474d55;
-  --metal-lo: #15181b;
+  --display-bg: #0a0a0a;
+  --display-ink: #f1efe9;
+  --display-dim: #9c9a94;
+  --display-coin: #ffc400;
+  --display-cobalt: #ff7a1a; /* third chart series */
+  --display-grid: #2c2c2c;
+  --display-pos: #ffc400;
+  --display-neg: #ff8a4c;
+  --metal: #2e2e2e;
+  --metal-hi: #4c4c4c;
+  --metal-lo: #161616;
 
   /* the client proposal is always a sheet of paper, whatever the theme */
   --paper: #fbfaf7;
-  --paper-ink: #15212c;
-  --paper-muted: #55636f;
-  --paper-line: #d9dcd8;
-  --paper-coin: #855700;
-  --paper-accent: #1b37a3;
+  --paper-ink: #141414;
+  --paper-muted: #55524c;
+  --paper-line: #dad8d2;
+  --paper-coin: #b84a00;
+  --paper-accent: #141414;
   --paper-gain: #1d7a4f;
 
   --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
 }
-/* Paper stays paper in the dark; only the room around it dims. */
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) { --cabinet: #101f63; --cabinet-deep: #0b1648; }
-}
-:root[data-theme="dark"] { --cabinet: #101f63; --cabinet-deep: #0b1648; }
 
 .on-cabinet {
-  --ink: #f6f2e7; --muted: #cdd5f5; --line: #5a70c8; --accent: #f2b544; --coin: #f2b544;
+  --ink: #f5f1e8; --muted: #b8b4aa; --line: #4a4a4a; --accent: #ffc400; --coin: #ffc400;
   --panel: var(--cabinet-deep); --bg: var(--cabinet-deep);
   color: var(--ink); color-scheme: dark;
 }
+
+/* the sign across the top of the machine: full-bleed orange, black lettering */
+.on-orange {
+  --ink: #141414; --muted: #2b1a0c; --line: #141414; --accent: #141414; --coin: #141414;
+  --panel: #f5f1e8; --bg: #f5f1e8;
+  color: var(--ink); color-scheme: light;
+  background: var(--orange); box-shadow: 0 0 0 100vmax var(--orange); clip-path: inset(-100vmax -100vmax 0);
+}
+.on-orange :focus-visible { outline-color: #141414; }
+.on-orange .key-brass { background: #141414; color: var(--yellow); box-shadow: inset 0 1px 0 #3a3a3a, inset 0 -3px 0 #000; }
+.on-orange .key-brass:hover { background: #2a2a2a; }
+.on-orange .key-brass:active { box-shadow: inset 0 3px 0 #000; }
 
 @theme inline {
   --color-bg: var(--bg);
@@ -138,12 +147,12 @@ body {
 /* physical keys */
 .key-brass {
   display: inline-flex; align-items: center; min-height: 48px; padding: 0 18px; cursor: pointer;
-  background: #f2b544; color: #1b1404; font-weight: 600; font-size: 14px; white-space: nowrap; text-decoration: none; border: 0;
-  box-shadow: inset 0 1px 0 #ffdf9e, inset 0 -3px 0 #b57f1c;
+  background: var(--orange); color: #141414; font-weight: 600; font-size: 14px; white-space: nowrap; text-decoration: none; border: 0;
+  box-shadow: inset 0 1px 0 #ffa36b, inset 0 -3px 0 #b84a00;
   transition: background-color 120ms var(--ease-out);
 }
-.key-brass:hover { background: #f8c766; }
-.key-brass:active { box-shadow: inset 0 3px 0 #b57f1c; }
+.key-brass:hover { background: #ff8238; }
+.key-brass:active { box-shadow: inset 0 3px 0 #b84a00; }
 .key-metal {
   background: var(--metal); color: var(--display-ink); cursor: pointer; border: 0;
   box-shadow: inset 0 1px 0 var(--metal-hi), inset 0 -3px 0 var(--metal-lo);
@@ -160,20 +169,20 @@ body {
   box-shadow: inset 0 1px 0 var(--metal-hi);
 }
 .rail b { font: 600 11px var(--font-mono); background: #f6f2e7; color: #17202b; padding: 1px 4px; }
-.slot:has(input:checked) .rail { background: #f2b544; color: #1b1404; box-shadow: none; }
+.slot:has(input:checked) .rail { background: var(--yellow); color: #141414; box-shadow: none; }
 
 /* the display, set in a metal bezel */
 .display { border: 8px solid var(--metal); box-shadow: 0 0 0 1px var(--metal-hi), inset 0 0 40px #000; }
-.lcd { color: var(--display-coin); text-shadow: 0 0 22px rgb(242 181 68 / .3); }
+.lcd { color: var(--display-coin); text-shadow: 0 0 22px rgb(255 196 0 / .3); }
 
 /* estimate fader: a brass slider on a printed scale */
 .fader { -webkit-appearance: none; appearance: none; width: 100%; height: 26px; background: transparent; cursor: pointer; margin: 0; }
 .fader::-webkit-slider-runnable-track { height: 4px; background: var(--ink); }
 .fader::-moz-range-track { height: 4px; background: var(--ink); }
-.fader::-webkit-slider-thumb { -webkit-appearance: none; width: 14px; height: 22px; margin-top: -9px; background: #f2b544; border: 1px solid var(--ink); box-shadow: inset 0 1px 0 #ffdf9e; }
-.fader::-moz-range-thumb { width: 12px; height: 20px; border-radius: 0; background: #f2b544; border: 1px solid var(--ink); }
-.fader:hover::-webkit-slider-thumb { background: #f8c766; }
-.fader:hover::-moz-range-thumb { background: #f8c766; }
+.fader::-webkit-slider-thumb { -webkit-appearance: none; width: 14px; height: 22px; margin-top: -9px; background: var(--orange); border: 1px solid var(--ink); box-shadow: inset 0 1px 0 #ffa36b; }
+.fader::-moz-range-thumb { width: 12px; height: 20px; border-radius: 0; background: var(--orange); border: 1px solid var(--ink); }
+.fader:hover::-webkit-slider-thumb { background: #ff8238; }
+.fader:hover::-moz-range-thumb { background: #ff8238; }
 
 /* till receipt, torn at the bottom */
 .receipt {
@@ -206,7 +215,7 @@ body {
 /* ---- chart series, defined per surface ---- */
 .display { --series-conservative: var(--display-dim); --series-realistic: var(--display-coin); --series-optimistic: var(--display-cobalt);
   --chart-grid: var(--display-grid); --chart-dim: var(--display-dim); --chart-ink: var(--display-ink); --chart-bg: var(--display-bg); }
-.sheet-paper { --series-conservative: #7d8a95; --series-realistic: var(--paper-coin); --series-optimistic: var(--paper-accent);
+.sheet-paper { --series-conservative: #8a8780; --series-realistic: var(--paper-coin); --series-optimistic: var(--paper-accent);
   --chart-grid: var(--paper-line); --chart-dim: var(--paper-muted); --chart-ink: var(--paper-ink); --chart-bg: var(--paper); }
 
 /* ---- motion: the machine powering up. Own code; transform, opacity and clip-path only. ---- */
@@ -267,6 +276,7 @@ body {
   html, body { background: #fff !important; }
   main { max-width: none !important; }
   .no-print { display: none !important; }
+  .on-orange { box-shadow: none; }
   .sheet-paper { background: #fff !important; box-shadow: none !important; border: 0 !important; padding: 0 !important; max-width: none !important; }
   .print-avoid-break { break-inside: avoid; }
   a { color: inherit; text-decoration: none; }

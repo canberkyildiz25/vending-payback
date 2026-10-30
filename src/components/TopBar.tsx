@@ -12,7 +12,7 @@ export function TopBar({ t, page }: { t: Messages; page: Page }) {
     { id: "case", href: "/case", label: t.sales.nav.caseStudy },
   ];
   return (
-    <div className="on-cabinet flex flex-wrap items-center justify-between gap-x-6 gap-y-3">
+    <div className="flex flex-wrap items-center justify-between gap-x-6 gap-y-3">
       <span className="sticker" aria-hidden="true">
         {t.header.sticker}
       </span>

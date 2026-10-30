@@ -21,7 +21,7 @@ export async function generateMetadata(): Promise<Metadata> {
 /** One beat of the conversation: what happens on the left, the evidence on the right, the lesson underneath. */
 function Beat({ n, title, body, lesson, children }: { n: number; title: string; body: ReactNode; lesson: string; children: ReactNode }) {
   return (
-    <section className="beat grid items-start gap-x-10 gap-y-4 border-t-2 border-[#5a70c8] pt-7 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.2fr)]">
+    <section className="beat grid items-start gap-x-10 gap-y-4 border-t-2 border-[#4a4a4a] pt-7 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.2fr)]">
       <div className="on-cabinet flex min-w-0 flex-col gap-2.5">
         <span className="num text-sm text-coin">{n} / 4</span>
         <h2 className="sign m-0 text-[clamp(30px,4.2vw,44px)] text-balance">{title}</h2>
@@ -47,15 +47,17 @@ export default async function CasePage() {
 
   return (
     <main className="mx-auto flex max-w-[1120px] flex-col gap-8 px-4 pt-5 pb-10">
+      <div className="on-orange -mt-5 flex flex-col gap-6 pt-5 pb-9">
       <TopBar t={t} page="case" />
-      <header className="on-cabinet flex flex-col gap-4">
+      <header className="flex flex-col gap-4">
         <h1 className="fascia m-0">{C.title}</h1>
         <p className="m-0 max-w-[60ch] text-[16px]">{C.intro}</p>
         <span className="self-start text-[11px] font-semibold tracking-[.06em] text-coin uppercase">{C.exampleTag}</span>
       </header>
+      </div>
 
       <Beat n={1} title={C.steps.problem.title} body={C.steps.problem.body(state.fleet.machines, fmt.money(results.realistic.monthlySalesToday))} lesson={C.steps.problem.lesson}>
-        <Image src={gym} alt={C.photoAlt} placeholder="blur" sizes="(min-width: 1024px) 560px, 100vw" className="shelf aspect-[16/9] h-auto w-full object-cover" />
+        <Image src={gym} alt={C.photoAlt} placeholder="blur" sizes="(min-width: 1024px) 560px, 100vw" className="shelf aspect-[16/9] h-auto w-full object-cover grayscale contrast-110" />
       </Beat>
 
       <Beat n={2} title={C.steps.numbers.title} body={C.steps.numbers.body} lesson={C.steps.numbers.lesson}>

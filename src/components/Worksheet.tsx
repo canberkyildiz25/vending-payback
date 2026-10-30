@@ -64,7 +64,7 @@ export function PresetTiles({ state, onPreset, wide = false }: Pick<Props, "stat
             alt=""
             sizes={wide ? "(min-width: 1024px) 180px, (min-width: 640px) 33vw, 50vw" : "(min-width: 640px) 200px, 45vw"}
             placeholder="blur"
-            className={`${wide ? "aspect-[4/3] h-auto lg:aspect-auto lg:h-0 lg:grow" : "aspect-[4/3] h-auto"} w-full object-cover opacity-70 grayscale transition-[filter,opacity] duration-200 group-hover:opacity-100 group-hover:grayscale-0 group-has-checked:opacity-100 group-has-checked:grayscale-0`}
+            className={`${wide ? "aspect-[4/3] h-auto lg:aspect-auto lg:h-0 lg:grow" : "aspect-[4/3] h-auto"} w-full object-cover opacity-70 grayscale transition-[filter,opacity] duration-200 group-hover:opacity-100 group-has-checked:opacity-100 ${id === "custom" ? "" : "group-hover:grayscale-0 group-has-checked:grayscale-0"}`}
           />
           <span className="rail">
             <b>{11 + i}</b>

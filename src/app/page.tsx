@@ -14,9 +14,10 @@ export default async function Home({ searchParams }: { searchParams: Promise<Sea
 
   return (
     <main className="mx-auto flex max-w-[1120px] flex-col gap-8 px-4 pt-5 pb-10">
+      <div className="on-orange -mt-5 flex flex-col gap-7 pt-5 pb-9">
       <TopBar t={t} page="calculator" />
 
-      <header className="on-cabinet flex flex-col gap-7">
+      <header className="flex flex-col gap-7">
         <h1 className="fascia m-0">{t.header.title}</h1>
         <div className="grid items-end gap-x-10 gap-y-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
           <div className="flex min-w-0 flex-col gap-4">
@@ -31,11 +32,12 @@ export default async function Home({ searchParams }: { searchParams: Promise<Sea
             </div>
           </div>
           <figure className="shelf m-0 flex min-w-0 flex-col">
-            <Image src={hero} alt={t.header.heroAlt} priority placeholder="blur" sizes="(min-width: 1024px) 520px, 100vw" className="signal-in aspect-[21/9] h-auto w-full object-cover" />
+            <Image src={hero} alt={t.header.heroAlt} priority placeholder="blur" sizes="(min-width: 1024px) 520px, 100vw" className="signal-in aspect-[21/9] h-auto w-full object-cover grayscale contrast-110" />
             <figcaption className="rail">{t.header.heroCaption}</figcaption>
           </figure>
         </div>
       </header>
+      </div>
 
       <Calculator initial={initial} />
 
