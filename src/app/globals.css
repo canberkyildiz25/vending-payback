@@ -1,66 +1,66 @@
 /* Hallmark · macrostructure: bespoke, the page is a vending machine · tone: industrial, printed, physical
  * theme: custom (vibe: "enamel cabinet, printed route sheet, till receipt")
- * sign sand #edb982 · cabinet #241610 · paper #f9e8d8 · signal lime #dee64c · brown #795243 · Archivo (62–90 width) + IBM Plex Sans + IBM Plex Mono
+ * sign cinnabar #ff4a3b · cabinet #26231a · paper ivory #f0eee2 · signal teal #b8ddd6 · khaki #93876e
  * pre-emit critique: P5 H4 E4 S5 R4 V5
  */
 @import "tailwindcss";
 
-/* Defaults describe printed paper. .on-cabinet and .on-sand re-point them for painted surfaces. */
+/* Defaults describe printed paper. .on-cabinet and .on-sign re-point them for painted surfaces. */
 :root {
-  --cabinet: #241610;
-  --cabinet-deep: #0f0703;
-  --sand: #edb982;
-  --lime: #dee64c;
-  --bg: #f5ebe8;
-  --panel: #f9e8d8;
-  --ink: #221508;
-  --muted: #5f4028;
-  --line: #cb917b;
-  --accent: #795243;
-  --coin: #4f5215;
-  --gain: #4f5215;
-  --loss: #a93226; /* errors only: outside the palette on purpose, they must not read as decoration */
-  --display-bg: #0e0f01;
-  --display-ink: #f9e8d8;
-  --display-dim: #c2c9cc;
-  --display-coin: #dee64c;
-  --display-cobalt: #edb982; /* third chart series */
-  --display-grid: #352213;
-  --display-pos: #dee64c;
-  --display-neg: #edb982;
-  --metal: #383b3d;
-  --metal-hi: #595f61;
-  --metal-lo: #191b1c;
+  --cabinet: #26231a;
+  --cabinet-deep: #14120c;
+  --sign: #ff4a3b;
+  --signal: #b8ddd6;
+  --bg: #fbfaf4;
+  --panel: #f0eee2;
+  --ink: #1f1c14;
+  --muted: #5c5443;
+  --line: #93876e;
+  --accent: #b3261a;
+  --coin: #0f6459;
+  --gain: #0f6459;
+  --loss: #b3261a;
+  --display-bg: #0f0e0a;
+  --display-ink: #f0eee2;
+  --display-dim: #b5ad98;
+  --display-coin: #b8ddd6;
+  --display-cobalt: #ff4a3b; /* third chart series */
+  --display-grid: #3a372c;
+  --display-pos: #b8ddd6;
+  --display-neg: #ff7a6e;
+  --metal: #3a372c;
+  --metal-hi: #5a5545;
+  --metal-lo: #1a1811;
 
   /* the client proposal is always a sheet of paper, whatever the theme */
-  --paper: #fdf8f3;
-  --paper-ink: #221508;
-  --paper-muted: #5f4028;
-  --paper-line: #debeb2;
-  --paper-coin: #795243;
-  --paper-accent: #4f5215;
-  --paper-gain: #4f5215;
+  --paper: #fbfaf4;
+  --paper-ink: #1f1c14;
+  --paper-muted: #5c5443;
+  --paper-line: #d9d5c4;
+  --paper-coin: #b3261a;
+  --paper-accent: #0f6459;
+  --paper-gain: #0f6459;
 
   --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
 }
 
 .on-cabinet {
-  --ink: #f9e8d8; --muted: #debeb2; --line: #5f4028; --accent: #dee64c; --coin: #dee64c;
+  --ink: #f0eee2; --muted: #c9c3b0; --line: #5a5545; --accent: #b8ddd6; --coin: #b8ddd6;
   --panel: var(--cabinet-deep); --bg: var(--cabinet-deep);
   color: var(--ink); color-scheme: dark;
 }
 
-/* the sign across the top of the machine: full-bleed sand, dark brown lettering */
-.on-sand {
-  --ink: #221508; --muted: #4a331a; --line: #221508; --accent: #221508; --coin: #221508;
-  --panel: #f9e8d8; --bg: #f9e8d8;
+/* the sign across the top of the machine: full-bleed cinnabar, near-black lettering */
+.on-sign {
+  --ink: #1f1c14; --muted: #1f1c14; --line: #1f1c14; --accent: #1f1c14; --coin: #1f1c14;
+  --panel: #f0eee2; --bg: #f0eee2;
   color: var(--ink); color-scheme: light;
-  background: var(--sand); box-shadow: 0 0 0 100vmax var(--sand); clip-path: inset(-100vmax -100vmax 0);
+  background: var(--sign); box-shadow: 0 0 0 100vmax var(--sign); clip-path: inset(-100vmax -100vmax 0);
 }
-.on-sand :focus-visible { outline-color: #221508; }
-.on-sand .key-brass { background: #221508; color: var(--lime); box-shadow: inset 0 1px 0 #4a331a, inset 0 -3px 0 #0f0703; }
-.on-sand .key-brass:hover { background: #352213; }
-.on-sand .key-brass:active { box-shadow: inset 0 3px 0 #0f0703; }
+.on-sign :focus-visible { outline-color: #1f1c14; }
+.on-sign .key-brass { background: #1f1c14; color: var(--signal); box-shadow: inset 0 1px 0 #4a4537, inset 0 -3px 0 #14120c; }
+.on-sign .key-brass:hover { background: #3a372c; }
+.on-sign .key-brass:active { box-shadow: inset 0 3px 0 #14120c; }
 
 @theme inline {
   --color-bg: var(--bg);
@@ -118,11 +118,11 @@ body {
 .sticker {
   font-family: var(--font-display); font-weight: 800; font-stretch: 75%;
   font-size: 13px; letter-spacing: .1em; text-transform: uppercase; white-space: nowrap;
-  background: #f9e8d8; color: #221508; padding: 5px 12px; position: relative; transform: rotate(-3deg);
+  background: #f0eee2; color: #1f1c14; padding: 5px 12px; position: relative; transform: rotate(-3deg);
 }
 .sticker::after {
   content: ""; position: absolute; left: -5px; right: -5px; top: 50%;
-  height: 3px; background: #795243; transform: rotate(-5deg);
+  height: 3px; background: #ff4a3b; transform: rotate(-5deg);
 }
 
 /* signage painted on the cabinet */
@@ -147,42 +147,42 @@ body {
 /* physical keys */
 .key-brass {
   display: inline-flex; align-items: center; min-height: 48px; padding: 0 18px; cursor: pointer;
-  background: var(--lime); color: #221508; font-weight: 600; font-size: 14px; white-space: nowrap; text-decoration: none; border: 0;
-  box-shadow: inset 0 1px 0 rgb(255 255 255 / .55), inset 0 -3px 0 #91972f;
+  background: var(--sign); color: #1f1c14; font-weight: 600; font-size: 14px; white-space: nowrap; text-decoration: none; border: 0;
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / .55), inset 0 -3px 0 #b3261a;
   transition: background-color 120ms var(--ease-out);
 }
-.key-brass:hover { background: #b7be3d; }
-.key-brass:active { box-shadow: inset 0 3px 0 #91972f; }
+.key-brass:hover { background: #ff6e61; }
+.key-brass:active { box-shadow: inset 0 3px 0 #b3261a; }
 .key-metal {
   background: var(--metal); color: var(--display-ink); cursor: pointer; border: 0;
   box-shadow: inset 0 1px 0 var(--metal-hi), inset 0 -3px 0 var(--metal-lo);
   transition: background-color 120ms var(--ease-out);
 }
-.key-metal:hover { background: #595f61; }
-.key-metal:active, .key-metal[aria-pressed="true"] { background: #191b1c; box-shadow: inset 0 3px 0 #0e0f01; }
+.key-metal:hover { background: #5a5545; }
+.key-metal:active, .key-metal[aria-pressed="true"] { background: #1a1811; box-shadow: inset 0 3px 0 #0f0e0a; }
 
 /* the machine's window: photos behind glass, price rail under each */
-.shelf { background: #0f0703; padding: 10px; box-shadow: inset 0 0 0 2px var(--metal), 0 0 0 6px var(--cabinet-deep); }
+.shelf { background: #14120c; padding: 10px; box-shadow: inset 0 0 0 2px var(--metal), 0 0 0 6px var(--cabinet-deep); }
 .rail {
   display: flex; align-items: center; gap: 8px; min-height: 40px; padding: 4px 8px;
   background: var(--metal); color: var(--display-ink); font-size: 13px; font-weight: 600; line-height: 1.15;
   box-shadow: inset 0 1px 0 var(--metal-hi);
 }
-.rail b { font: 600 11px var(--font-mono); background: #f9e8d8; color: #221508; padding: 1px 4px; }
-.slot:has(input:checked) .rail { background: var(--lime); color: #221508; box-shadow: none; }
+.rail b { font: 600 11px var(--font-mono); background: #f0eee2; color: #1f1c14; padding: 1px 4px; }
+.slot:has(input:checked) .rail { background: var(--signal); color: #1f1c14; box-shadow: none; }
 
 /* the display, set in a metal bezel */
 .display { border: 8px solid var(--metal); box-shadow: 0 0 0 1px var(--metal-hi), inset 0 0 40px #000; }
-.lcd { color: var(--display-coin); text-shadow: 0 0 22px rgb(222 230 76 / .3); }
+.lcd { color: var(--display-coin); text-shadow: 0 0 22px rgb(184 221 214 / .3); }
 
 /* estimate fader: a brass slider on a printed scale */
 .fader { -webkit-appearance: none; appearance: none; width: 100%; height: 26px; background: transparent; cursor: pointer; margin: 0; }
 .fader::-webkit-slider-runnable-track { height: 4px; background: var(--ink); }
 .fader::-moz-range-track { height: 4px; background: var(--ink); }
-.fader::-webkit-slider-thumb { -webkit-appearance: none; width: 14px; height: 22px; margin-top: -9px; background: var(--lime); border: 1px solid var(--ink); box-shadow: inset 0 1px 0 rgb(255 255 255 / .55); }
-.fader::-moz-range-thumb { width: 12px; height: 20px; border-radius: 0; background: var(--lime); border: 1px solid var(--ink); }
-.fader:hover::-webkit-slider-thumb { background: #b7be3d; }
-.fader:hover::-moz-range-thumb { background: #b7be3d; }
+.fader::-webkit-slider-thumb { -webkit-appearance: none; width: 14px; height: 22px; margin-top: -9px; background: var(--sign); border: 1px solid var(--ink); box-shadow: inset 0 1px 0 rgb(255 255 255 / .55); }
+.fader::-moz-range-thumb { width: 12px; height: 20px; border-radius: 0; background: var(--sign); border: 1px solid var(--ink); }
+.fader:hover::-webkit-slider-thumb { background: #ff6e61; }
+.fader:hover::-moz-range-thumb { background: #ff6e61; }
 
 /* glass tube with gel inside: a real <progress>, so no extra markup and no JS */
 .gel {
@@ -193,14 +193,14 @@ body {
 .gel::-webkit-progress-bar { background: linear-gradient(#0c0c0c, #2a2a2a); border-radius: 999px; box-shadow: inset 0 2px 6px #000, inset 0 -1px 0 rgb(255 255 255 / .14); }
 .gel::-webkit-progress-value {
   border-radius: 999px;
-  background: linear-gradient(rgb(255 255 255 / .62), rgb(255 255 255 / .08) 42%, rgb(0 0 0 / .05) 60%, rgb(255 255 255 / .22)), linear-gradient(90deg, #ca9253, var(--lime));
+  background: linear-gradient(rgb(255 255 255 / .62), rgb(255 255 255 / .08) 42%, rgb(0 0 0 / .05) 60%, rgb(255 255 255 / .22)), linear-gradient(90deg, #93876e, var(--signal));
 }
 .gel::-moz-progress-bar {
   border-radius: 999px;
-  background: linear-gradient(rgb(255 255 255 / .62), rgb(255 255 255 / .08) 42%, rgb(0 0 0 / .05) 60%, rgb(255 255 255 / .22)), linear-gradient(90deg, #ca9253, var(--lime));
+  background: linear-gradient(rgb(255 255 255 / .62), rgb(255 255 255 / .08) 42%, rgb(0 0 0 / .05) 60%, rgb(255 255 255 / .22)), linear-gradient(90deg, #93876e, var(--signal));
 }
-.gel.gel-bad::-webkit-progress-value { background: linear-gradient(rgb(255 255 255 / .5), rgb(255 255 255 / .05) 45%, rgb(255 255 255 / .18)), linear-gradient(90deg, #795243, #cb917b); }
-.gel.gel-bad::-moz-progress-bar { background: linear-gradient(rgb(255 255 255 / .5), rgb(255 255 255 / .05) 45%, rgb(255 255 255 / .18)), linear-gradient(90deg, #795243, #cb917b); }
+.gel.gel-bad::-webkit-progress-value { background: linear-gradient(rgb(255 255 255 / .5), rgb(255 255 255 / .05) 45%, rgb(255 255 255 / .18)), linear-gradient(90deg, #ff4a3b, #ff4a3b); }
+.gel.gel-bad::-moz-progress-bar { background: linear-gradient(rgb(255 255 255 / .5), rgb(255 255 255 / .05) 45%, rgb(255 255 255 / .18)), linear-gradient(90deg, #ff4a3b, #ff4a3b); }
 
 /* till receipt, torn at the bottom */
 .receipt {
@@ -209,7 +209,7 @@ body {
   mask: linear-gradient(#000 0 0) top / 100% calc(100% - 8px) no-repeat,
         conic-gradient(from -45deg at bottom, #0000, #000 1deg 89deg, #0000 90deg) bottom / 16px 8px repeat-x;
 }
-.dispense { height: 12px; background: #0f0703; box-shadow: inset 0 3px 3px #000, 0 0 0 4px var(--metal); margin: 0 10px; }
+.dispense { height: 12px; background: #14120c; box-shadow: inset 0 3px 3px #000, 0 0 0 4px var(--metal); margin: 0 10px; }
 
 /* ---- number inputs ---- */
 .inp { position: relative; display: flex; align-items: center; min-width: 0; }
@@ -218,8 +218,8 @@ body {
   color: var(--ink); background: var(--bg); border: 1px solid var(--ink);
   padding: 8px 10px;
 }
-.inp input:hover { background: #f9e8d8; }
-.inp input:focus-visible { background: #eecdb6; outline-offset: 1px; }
+.inp input:hover { background: #f0eee2; }
+.inp input:focus-visible { background: #b8ddd6; outline-offset: 1px; }
 .inp input[aria-invalid="true"] { border-color: var(--loss); }
 .inp.is-measured input { border-color: var(--gain); box-shadow: inset 3px 0 0 var(--gain); }
 .inp.has-unit input { padding-right: 30px; }
@@ -233,7 +233,7 @@ body {
 /* ---- chart series, defined per surface ---- */
 .display { --series-conservative: var(--display-dim); --series-realistic: var(--display-coin); --series-optimistic: var(--display-cobalt);
   --chart-grid: var(--display-grid); --chart-dim: var(--display-dim); --chart-ink: var(--display-ink); --chart-bg: var(--display-bg); }
-.sheet-paper { --series-conservative: #7b8285; --series-realistic: var(--paper-coin); --series-optimistic: var(--paper-accent);
+.sheet-paper { --series-conservative: #93876e; --series-realistic: var(--paper-coin); --series-optimistic: var(--paper-accent);
   --chart-grid: var(--paper-line); --chart-dim: var(--paper-muted); --chart-ink: var(--paper-ink); --chart-bg: var(--paper); }
 
 /* ---- motion: the machine powering up. Own code; transform, opacity and clip-path only. ---- */
@@ -294,7 +294,7 @@ body {
   html, body { background: #fff !important; }
   main { max-width: none !important; }
   .no-print { display: none !important; }
-  .on-sand { box-shadow: none; }
+  .on-sign { box-shadow: none; }
   .sheet-paper { background: #fff !important; box-shadow: none !important; border: 0 !important; padding: 0 !important; max-width: none !important; }
   .print-avoid-break { break-inside: avoid; }
   a { color: inherit; text-decoration: none; }
