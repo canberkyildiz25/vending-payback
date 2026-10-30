@@ -78,7 +78,7 @@ export function ResultDisplay({ state, results, onSelect, proposalHref }: Props)
             return (
               <button key={id} type="button" aria-pressed={on} onClick={() => onSelect(id)} className="key-metal flex min-h-16 min-w-0 flex-col items-start gap-1 px-2 py-2 text-left sm:px-2.5">
                 <span className="flex max-w-full items-center gap-1.5">
-                  <span className={`num shrink-0 px-1 text-[11px] font-semibold ${on ? "bg-display-coin text-[#1b1404]" : "bg-[#f6f2e7] text-[#17202b]"}`}>{KEY[id]}</span>
+                  <span className={`num shrink-0 px-1 text-[11px] font-semibold ${on ? "bg-display-coin text-[#221508]" : "bg-[#f9e8d8] text-[#221508]"}`}>{KEY[id]}</span>
                   <span className="label-caps min-w-0 truncate text-[10px] tracking-[.03em] text-display-dim [font-stretch:68%] sm:text-[11px]">{t.scenario[id]}</span>
                 </span>
                 <span className={`num text-lg leading-none font-semibold ${on ? "text-display-coin" : ""}`}>

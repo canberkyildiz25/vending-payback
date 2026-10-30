@@ -13,7 +13,7 @@ export default async function Home({ searchParams }: { searchParams: Promise<Sea
 
   return (
     <main className="mx-auto flex max-w-[1120px] flex-col gap-8 px-4 pt-5 pb-10">
-      <div className="on-orange -mt-5 flex flex-col gap-7 pt-5 pb-9">
+      <div className="on-sand -mt-5 flex flex-col gap-7 pt-5 pb-9">
       <TopBar t={t} page="calculator" />
 
       <header className="flex flex-col gap-7">
